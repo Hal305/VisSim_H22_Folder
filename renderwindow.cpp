@@ -118,9 +118,9 @@ void RenderWindow::init()
     //NB: hardcoded path to files! You have to change this if you change directories for the project.
     //Qt makes a build-folder besides the project folder. That is why we go down one directory
     // (out of the build-folder) and then up into the project folder.
-    mShaders.push_back(new Shader("../3Dprog22/plainshader.vert", "../3Dprog22/plainshader.frag"));
+    mShaders.push_back(new Shader("../VisSim_H22_Folder/plainshader.vert", "../VisSim_H22_Folder/plainshader.frag"));
     mLogger->logText("Plain shader program id: " + std::to_string(mShaders.back()->getProgram()) );
-    mShaders.push_back( new Shader("../3Dprog22/PhongShader.vert", "../3Dprog22/PhongShader.frag"));
+    mShaders.push_back( new Shader("../VisSim_H22_Folder/PhongShader.vert", "../VisSim_H22_Folder/PhongShader.frag"));
     mLogger->logText("Texture shader program id: " + std::to_string(mShaders.back()->getProgram()) );
 
     for(unsigned int i = 0; i < mShaders.size(); i++)
@@ -140,7 +140,7 @@ void RenderWindow::init()
     temp->setName("xyz");
     mObjects.push_back(temp);
 
-    surface = new TriangleSurface("../3DProg22/Assets/Textfiles/rollingplane.txt");
+    surface = new TriangleSurface("../VisSim_H22_Folder/rollingplane.txt");
     mObjects.push_back(surface);
     ball = new RollingBall(3);
     dynamic_cast<RollingBall*>(ball)->setSurface(surface);
