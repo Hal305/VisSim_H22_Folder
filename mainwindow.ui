@@ -16,20 +16,70 @@
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <widget class="QPushButton" name="wireFrameButton">
-      <property name="text">
-       <string>Wireframe mode: Off</string>
-      </property>
-      <property name="checkable">
-       <bool>true</bool>
-      </property>
-      <property name="checked">
-       <bool>false</bool>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <layout class="QVBoxLayout" name="OpenGLLayout"/>
+     <layout class="QVBoxLayout" name="OpenGLLayout">
+      <item>
+       <layout class="QGridLayout" name="gridLayout">
+        <item row="0" column="3">
+         <widget class="QPushButton" name="SpawnBall">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>Spawn Ball</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="5">
+         <widget class="QPushButton" name="SpawnRain">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>Spawn Rain</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QPushButton" name="wireFrameButton">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>Wireframe mode: Off</string>
+          </property>
+          <property name="checkable">
+           <bool>true</bool>
+          </property>
+          <property name="checked">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="2">
+         <widget class="QPushButton" name="ToggleRender">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>Toggle Render</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
     </item>
    </layout>
   </widget>
@@ -39,7 +89,7 @@
      <x>0</x>
      <y>0</y>
      <width>1600</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -122,15 +172,6 @@
             </color>
            </brush>
           </colorrole>
-          <colorrole role="BrightText">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>255</red>
-             <green>255</green>
-             <blue>255</blue>
-            </color>
-           </brush>
-          </colorrole>
           <colorrole role="ButtonText">
            <brush brushstyle="SolidPattern">
             <color alpha="255">
@@ -173,24 +214,6 @@
              <red>17</red>
              <green>17</green>
              <blue>17</blue>
-            </color>
-           </brush>
-          </colorrole>
-          <colorrole role="ToolTipBase">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>255</red>
-             <green>255</green>
-             <blue>220</blue>
-            </color>
-           </brush>
-          </colorrole>
-          <colorrole role="ToolTipText">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>0</red>
-             <green>0</green>
-             <blue>0</blue>
             </color>
            </brush>
           </colorrole>
@@ -259,15 +282,6 @@
             </color>
            </brush>
           </colorrole>
-          <colorrole role="BrightText">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>255</red>
-             <green>255</green>
-             <blue>255</blue>
-            </color>
-           </brush>
-          </colorrole>
           <colorrole role="ButtonText">
            <brush brushstyle="SolidPattern">
             <color alpha="255">
@@ -310,24 +324,6 @@
              <red>17</red>
              <green>17</green>
              <blue>17</blue>
-            </color>
-           </brush>
-          </colorrole>
-          <colorrole role="ToolTipBase">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>255</red>
-             <green>255</green>
-             <blue>220</blue>
-            </color>
-           </brush>
-          </colorrole>
-          <colorrole role="ToolTipText">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>0</red>
-             <green>0</green>
-             <blue>0</blue>
             </color>
            </brush>
           </colorrole>
@@ -396,15 +392,6 @@
             </color>
            </brush>
           </colorrole>
-          <colorrole role="BrightText">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>255</red>
-             <green>255</green>
-             <blue>255</blue>
-            </color>
-           </brush>
-          </colorrole>
           <colorrole role="ButtonText">
            <brush brushstyle="SolidPattern">
             <color alpha="255">
@@ -447,24 +434,6 @@
              <red>34</red>
              <green>34</green>
              <blue>34</blue>
-            </color>
-           </brush>
-          </colorrole>
-          <colorrole role="ToolTipBase">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>255</red>
-             <green>255</green>
-             <blue>220</blue>
-            </color>
-           </brush>
-          </colorrole>
-          <colorrole role="ToolTipText">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>0</red>
-             <green>0</green>
-             <blue>0</blue>
             </color>
            </brush>
           </colorrole>
