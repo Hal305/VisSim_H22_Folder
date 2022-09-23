@@ -6,7 +6,6 @@
 #include <vector>
 #include "vertex.h"
 
-enum CollisionBox{none, AABB};
 class VisualObject : public QOpenGLFunctions_4_1_Core
 {
 public:
@@ -24,15 +23,11 @@ public:
     QVector3D getPosition3D();
     void setName (std::string name);
     std::string getName() const;
-    QVector3D findNormalV(float x, float y, float z);
     virtual void setScale(float scale);
+    const float g = -9.81;
     QMatrix4x4 mMatrix;
     virtual GLuint getShaderId(){return mShaderId;}
     virtual GLuint getTexId(){return mTextureId;}
-
-    CollisionBox mCollisionBox{none};
-    QVector3D collisionBoxSize{};
-    void getPlaneHeight(float z);
 
 protected:
     std::vector<Vertex> mVertices;

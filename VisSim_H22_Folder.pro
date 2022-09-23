@@ -17,6 +17,7 @@ HEADERS += \
     mainwindow.h \
     octaball.h \
     quadtree.h \
+    raindrop.h \
     renderwindow.h \
     rollingball.h \
     shader.h \
@@ -33,6 +34,7 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     octaball.cpp \
+    raindrop.cpp \
     renderwindow.cpp \
     rollingball.cpp \
     shader.cpp \
