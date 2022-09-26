@@ -22,6 +22,7 @@
 #include "trianglesurface.h"
 #include "octaball.h"
 #include "rollingball.h"
+#include "raindrop.h"
 #include "barycentriccalc.h"
 
 RenderWindow::RenderWindow(const QSurfaceFormat &format, MainWindow *mainWindow)
@@ -146,6 +147,9 @@ void RenderWindow::init()
     dynamic_cast<RollingBall*>(ball)->setSurface(surface);
     mObjects.push_back(ball);
 
+    rain = new RainDrop(2, 0, 0);
+    mObjects.push_back(rain);
+
     mLight = new Light(mShaders[0]->getProgram());
     mLight->setName("light");
     mLight->mMatrix.translate(1.f, 1.f, 1.f);
@@ -248,6 +252,7 @@ void RenderWindow::render()
 
     movePlayer();
     ball->move(0.017);
+    rain->move(0.005f);
 
     //Calculate framerate before
     // checkForGLerrors() because that call takes a long time

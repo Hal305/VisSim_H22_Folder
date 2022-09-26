@@ -51,15 +51,6 @@ std::string VisualObject::getName() const
     return mName;
 }
 
-QVector3D VisualObject::findNormalV(float x, float y, float z)
-{
-    QVector3D temp1, temp2, temp3;
-    temp1 = {1,0,x-z};
-    temp2 = {0,1,y-z};
-    temp3 = QVector3D::normal(temp1,temp2);
-    return temp3;
-}
-
 void VisualObject::setScale(float scale)
 {
     mScale.scale(QVector3D(scale,scale,scale));

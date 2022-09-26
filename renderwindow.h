@@ -23,6 +23,7 @@ class XYZ;
 class TriangleSurface;
 class OctaBall;
 class RollingBall;
+class RainDrop;
 
 /// This inherits from QWindow to get access to the Qt functionality and
 // OpenGL surface.
@@ -53,6 +54,7 @@ private:
 
     VisualObject* surface {nullptr};
     VisualObject* ball {nullptr};
+    VisualObject* rain {nullptr};
     Input mInput;
     Camera* mCamera {nullptr};
     float aspectratio = 1.f;

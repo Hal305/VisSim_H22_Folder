@@ -12,16 +12,19 @@ RainDrop::~RainDrop()
 
 void RainDrop::spawn(float x, float y)
 {
-    QVector4D pos{x,y,mz,1.0};
-    mPosition.setRow(3,pos);
-    setScale(0.001f);
-    mMatrix = mScale*mPosition;
+    setScale(0.01f);
+    mx = x, my = y;
+    mPosition.translate(mx, my, mz);
+    mMatrix = mPosition*mScale;;
 }
 
 void RainDrop::move(float dt)
 {
     float G = dt * g;
     mz += G;
+    mPosition.translate(0, 0, G);
+    mMatrix = mPosition*mScale;
+    qDebug() << G << mz;
 }
 
 void RainDrop::init(GLint matrixUniform)
