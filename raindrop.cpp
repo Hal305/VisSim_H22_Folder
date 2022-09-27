@@ -27,6 +27,11 @@ void RainDrop::move(float dt)
     //qDebug() << G << mz;
 }
 
+float RainDrop::getZ()
+{
+    return mz;
+}
+
 void RainDrop::init(GLint matrixUniform)
 {
     mMatrixUniform = matrixUniform;

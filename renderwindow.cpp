@@ -264,10 +264,18 @@ void RenderWindow::render()
     if(!mRaindrops.empty())
     {
         for (auto it : mRaindrops)
+        {
             it->draw();
+            if (it->getZ() <= 0)
+            {
+                mRaindrops.erase(mRaindrops.begin());
+                rainDropCount--;
+            }
+        }
     }
+
     movePlayer();
-    //ball->move(0.017f);
+    ball->move(0.017f);
 
     if(!mRaindrops.empty())
         for (auto it : mRaindrops)

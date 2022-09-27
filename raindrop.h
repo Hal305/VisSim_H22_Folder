@@ -13,6 +13,7 @@ public:
     void spawn(float x, float y);
     void move(float dt) ;
     void setSurface(VisualObject* surface) { triangle_surface = surface; }
+    float getZ();
 protected:
     VisualObject* triangle_surface;
 private:
