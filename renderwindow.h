@@ -43,6 +43,13 @@ public:
     void setupShader(int index);
 
     bool bWireFrame {false};
+    bool bRaining {false};
+    float x = 0, y = 0;
+    const float xmin = 0, xmax = 60;
+    const float ymin = 0, ymax = 20;
+    const int r = 2;
+    int rainDropCount = 0;
+    float rainTimer = 0;
 
 private slots:
     void render();          //the actual render - function
@@ -55,6 +62,7 @@ private:
     VisualObject* surface {nullptr};
     VisualObject* ball {nullptr};
     VisualObject* rain {nullptr};
+    std::vector<RainDrop*> mRaindrops;
     Input mInput;
     Camera* mCamera {nullptr};
     float aspectratio = 1.f;

@@ -5,7 +5,7 @@ RollingBall::RollingBall(int n) : OctaBall (n)
     //mVelocity = QVector3d{1.0f, 1.0f, -0.05f};
     mPosition.translate(mx,my,mz);
     setScale(0.1);
-
+    mMatrix = mPosition * mScale;
 }
 
 RollingBall::~RollingBall()

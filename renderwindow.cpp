@@ -10,6 +10,7 @@
 
 #include <string>
 #include <unordered_map>
+#include <ctime>
 
 #include "vertex.h"
 #include "visualobject.h"
@@ -56,6 +57,7 @@ RenderWindow::~RenderWindow()
 // Sets up the general OpenGL stuff and the buffers needed to render a Cube
 void RenderWindow::init()
 {
+    srand(time(NULL));
     //Get the instance of the utility Output logger
     //Have to do this, else program will crash (or you have to put in nullptr tests...)
     mLogger = Logger::getInstance();
@@ -131,10 +133,6 @@ void RenderWindow::init()
     mMMatrix->setToIdentity();    //1, 1, 1, 1 in the diagonal of the matrix
 
     mCamera = new Camera();
-    //Interaction object
-//    player = new Player;
-//    player->setName("player");
-//    mObjects.push_back(player);
 
     //Standard/Quadtree
     VisualObject* temp = new XYZ();
@@ -147,8 +145,8 @@ void RenderWindow::init()
     dynamic_cast<RollingBall*>(ball)->setSurface(surface);
     mObjects.push_back(ball);
 
-    rain = new RainDrop(2, 0, 0);
-    mObjects.push_back(rain);
+//    rain = new RainDrop(2, 0, 0);
+//    mObjects.push_back(rain);
 
     mLight = new Light(mShaders[0]->getProgram());
     mLight->setName("light");
@@ -245,14 +243,36 @@ void RenderWindow::render()
             it->drawLines();
         else
             it->draw();
-        static float rotate{0.f};
-        mLight->mMatrix.translate(sinf(rotate)/10, cosf(rotate)/10, cosf(rotate)/60);
-        rotate += 0.01f;
+    }
+    static float rotate{0.f};
+    mLight->mMatrix.translate(sinf(rotate)/10, cosf(rotate)/10, cosf(rotate)/60);
+    rotate += 0.01f;
+
+    rainTimer += 0.5f;
+
+
+    if(rainTimer >= 3 && rainDropCount < 10)
+    {
+        //float x = rand() % 60, y = rand() % 20;
+        qDebug() << x << y;
+        mRaindrops.push_back(new RainDrop(r, x, y));
+        rainDropCount ++;
+        mRaindrops.back()->init(mMMatrixUniform[0]);
+        rainTimer = 0;
+        x += 3, y += 2;
     }
 
+    if(!mRaindrops.empty())
+    {
+        for (auto it : mRaindrops)
+            it->draw();
+    }
     movePlayer();
-    ball->move(0.017);
-    rain->move(0.005f);
+    //ball->move(0.017f);
+
+    if(!mRaindrops.empty())
+        for (auto it : mRaindrops)
+            it->move(0.005f);
 
     //Calculate framerate before
     // checkForGLerrors() because that call takes a long time
