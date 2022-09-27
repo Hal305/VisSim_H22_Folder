@@ -24,7 +24,7 @@ void RainDrop::move(float dt)
     mz += G;
     mPosition.translate(0, 0, G);
     mMatrix = mPosition*mScale;
-    qDebug() << G << mz;
+    //qDebug() << G << mz;
 }
 
 void RainDrop::init(GLint matrixUniform)

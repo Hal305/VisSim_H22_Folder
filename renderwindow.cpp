@@ -251,15 +251,14 @@ void RenderWindow::render()
     rainTimer += 0.5f;
 
 
-    if(rainTimer >= 3 && rainDropCount < 10)
+    if(rainTimer >= 3 && rainDropCount < 20)
     {
-        //float x = rand() % 60, y = rand() % 20;
-        qDebug() << x << y;
+        x = rand() % 60/10.f, y = rand() % 20/10.f;
+        //qDebug() << x << y;
         mRaindrops.push_back(new RainDrop(r, x, y));
         rainDropCount ++;
         mRaindrops.back()->init(mMMatrixUniform[0]);
         rainTimer = 0;
-        x += 3, y += 2;
     }
 
     if(!mRaindrops.empty())
