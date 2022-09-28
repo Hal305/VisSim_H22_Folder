@@ -248,29 +248,39 @@ void RenderWindow::render()
     mLight->mMatrix.translate(sinf(rotate)/10, cosf(rotate)/10, cosf(rotate)/60);
     rotate += 0.01f;
 
-    rainTimer += 0.5f;
-
-
-    if(rainTimer >= 3 && rainDropCount < 20)
+    if(bRaining)
     {
-        x = rand() % 60/10.f, y = rand() % 20/10.f;
-        //qDebug() << x << y;
-        mRaindrops.push_back(new RainDrop(r, x, y));
-        rainDropCount ++;
-        mRaindrops.back()->init(mMMatrixUniform[0]);
-        rainTimer = 0;
-    }
-
-    if(!mRaindrops.empty())
-    {
-        for (auto it : mRaindrops)
+        rainTimer += 0.5f;
+        if(rainTimer >= 3 && rainDropCount < 20)
         {
-            it->draw();
-            if (it->getZ() <= 0)
+            x = rand() % 60/10.f, y = rand() % 20/10.f;
+            //qDebug() << x << y;
+            mRaindrops.push_back(new RainDrop(r, x, y));
+            rainDropCount ++;
+            mRaindrops.back()->init(mMMatrixUniform[0]);
+            rainTimer = 0;
+        }
+
+        if(!mRaindrops.empty())
+        {
+            for (auto it : mRaindrops)
             {
-                mRaindrops.erase(mRaindrops.begin());
-                rainDropCount--;
+                it->draw();
+                if (it->getZ() <= 0)
+                {
+                    mRaindrops.erase(mRaindrops.begin());
+                    rainDropCount--;
+                }
             }
+        }
+    }
+    else
+    {
+        if(!mRaindrops.empty())
+        {
+            mRaindrops.clear();
+            rainTimer = 0;
+            rainDropCount = 0;
         }
     }
 

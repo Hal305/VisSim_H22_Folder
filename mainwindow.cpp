@@ -90,6 +90,20 @@ void MainWindow::on_wireFrameButton_toggled(bool checked)
     }
 }
 
+void MainWindow::on_rainButton_toggled(bool checked)
+{
+    if(!checked)
+    {
+        mRenderWindow->bRaining = false;
+        ui->rainButton->setText("Spawn rain");
+    }
+    else
+    {
+        mRenderWindow->bRaining = true;
+        ui->rainButton->setText("Stop rain");
+    }
+}
+
 //File menu Exit closes the program
 void MainWindow::on_fileExit_triggered()
 {
