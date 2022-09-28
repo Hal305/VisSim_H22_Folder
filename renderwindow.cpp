@@ -139,7 +139,7 @@ void RenderWindow::init()
     temp->setName("xyz");
     mObjects.push_back(temp);
 
-    surface = new TriangleSurface("../VisSim_H22_Folder/rollingplane.txt");
+    surface = new TriangleSurface("../VisSim_H22_Folder/terrain.txt");
     mObjects.push_back(surface);
     ball = new RollingBall(3);
     dynamic_cast<RollingBall*>(ball)->setSurface(surface);

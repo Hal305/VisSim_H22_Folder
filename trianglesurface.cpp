@@ -19,6 +19,8 @@ TriangleSurface::TriangleSurface(std::string filename) : VisualObject()
                 2,5,4
                };
 
+    //mMatrix.translate(-xmin, -ymin, -220);
+
 //    v0 = {mVertices[0].getX(), mVertices[0].getY(), mVertices[0].getZ()},
 //    v1 = {mVertices[1].getX(), mVertices[1].getY(), mVertices[1].getZ()},
 //    v2 = {mVertices[2].getX(), mVertices[2].getY(), mVertices[2].getZ()},
@@ -59,7 +61,19 @@ void TriangleSurface::readFile(std::string filename)
         {
              inn >> vertex;
              mVertices.push_back(vertex);
+             //qDebug() << "x = " << vertex.getX() <<  "y = " << vertex.getY()<< "z = " << vertex.getZ();
+             if(vertex.getX() < xmin)
+                 xmin = vertex.getX();
+             if(vertex.getY() < ymin)
+                 ymin = vertex.getY();
+             if(vertex.getX() > xmax)
+                 xmax = vertex.getX();
+             if(vertex.getY() > ymax)
+                 ymax = vertex.getY();
         }
+        qDebug() << xmin << ymin;
+        qDebug() << xmax << ymax;
+        qDebug() << xmax - xmin << ymax - ymin;
 
 //        inn >> n;
 //        mIndices.reserve(n);
@@ -134,5 +148,3 @@ void TriangleSurface::draw()
     //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIBO);
     glDrawElements(GL_TRIANGLES, GLsizei(mIndices.size()), GL_UNSIGNED_INT, reinterpret_cast<const void*>(0));
 }
-
-
