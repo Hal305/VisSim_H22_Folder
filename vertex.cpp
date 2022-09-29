@@ -67,3 +67,10 @@ std::istream& operator>> (std::istream& is, Vertex& v) {
   is >> dum >> v.m_uv[0] >> dum2 >> v.m_uv[1] >> dum3;
   return is;
 }
+
+void Vertex::setXYZ(float x, float y, float z)
+{
+    m_xyz[0] = x;
+    m_xyz[1] = y;
+    m_xyz[2] = z;
+}
