@@ -80,6 +80,7 @@ void TriangleSurface::readFile(std::string filename)
         }
 //        qDebug() << xmin << ymin;
 //        qDebug() << xmax << ymax;
+//        qDebug() << zmin;
 //        qDebug() << xmax - xmin << ymax - ymin;
 
 //        inn >> n;
@@ -118,7 +119,8 @@ void TriangleSurface::origoFixer()
     {
         mVertices.at(i).setXYZ(mVertices.at(i).getX()-xmin,
                                mVertices.at(i).getY()-ymin,
-                               mVertices.at(i).getZ()-zmin);
+                               mVertices.at(i).getZ()-zmax);
+        //qDebug() << mVertices.at(i).getX() << mVertices.at(i).getY() << mVertices.at(i).getZ();
     }
 }
 
@@ -158,11 +160,16 @@ void TriangleSurface::init(GLint matrixUniform)
 
 void TriangleSurface::draw()
 {
-    initializeOpenGLFunctions();
-    glBindVertexArray( mVAO );
-    // GL_FALSE for QMatrix4x4
+//    initializeOpenGLFunctions();
+//    glBindVertexArray( mVAO );
+//    // GL_FALSE for QMatrix4x4
+//    glUniformMatrix4fv( mMatrixUniform, 1, GL_FALSE, mMatrix.constData());
+//    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIBO);
+//    glDrawElements(GL_TRIANGLES, GLsizei(mIndices.size()), GL_UNSIGNED_INT, reinterpret_cast<const void*>(0));
+
+    //GLDrawArrays for testing purposes
+    glBindVertexArray(mVAO);
     glUniformMatrix4fv( mMatrixUniform, 1, GL_FALSE, mMatrix.constData());
-    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIBO);
-    glDrawElements(GL_TRIANGLES, GLsizei(mIndices.size()), GL_UNSIGNED_INT, reinterpret_cast<const void*>(0));
+    glDrawArrays(GL_TRIANGLES, 0, mVertices.size());
 }
 
