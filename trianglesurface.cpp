@@ -154,5 +154,8 @@ void TriangleSurface::draw()
 
 void TriangleSurface::origoFixer()
 {
-
+    for (unsigned int i = 0; i++; i < mVertices.size())
+    {
+        mVertices.at(i).setXYZ(mVertices.at(i).getX()-xmin, mVertices.at(i).getY()-ymin, mVertices.at(i).getZ()); //change to use zmin
+    };
 }
