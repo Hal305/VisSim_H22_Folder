@@ -44,6 +44,13 @@ float Vertex::getZ()
     return m_xyz[2];
 }
 
+void Vertex::setXYZ(float x, float y, float z)
+{
+    m_xyz[0] = x;
+    m_xyz[1] = y;
+    m_xyz[2] = z;
+}
+
 void Vertex::setNormal(QVector3D normal)
 {
     m_rgb[0] = normal.x();
@@ -68,9 +75,3 @@ std::istream& operator>> (std::istream& is, Vertex& v) {
   return is;
 }
 
-void Vertex::setXYZ(float x, float y, float z)
-{
-    m_xyz[0] = x;
-    m_xyz[1] = y;
-    m_xyz[2] = z;
-}

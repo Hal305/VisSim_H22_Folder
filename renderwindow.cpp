@@ -30,10 +30,10 @@
 RenderWindow::RenderWindow(const QSurfaceFormat &format, MainWindow *mainWindow)
     : mContext(nullptr), mInitialized(false), mMainWindow(mainWindow)
 {
-    std::vector<int> t {0,0,0,1,2,2,3};
-    std::vector<QVector2D> c {{0,1},{1,0},{2,1},{3,0},{4,1}};
-    BSplineCurve spline(2, t, c);
-    qDebug() << spline.evaluateBSplineSample(1);
+//    std::vector<int> t {0,0,0,1,2,2,3};
+//    std::vector<QVector2D> c {{0,1},{1,0},{2,1},{3,0},{4,1}};
+//    BSplineCurve spline(2, t, c);
+//    qDebug() << spline.evaluateBSplineSample(1);
 
     //This is sent to QWindow:
     setSurfaceType(QWindow::OpenGLSurface);
@@ -265,25 +265,19 @@ void RenderWindow::render()
             mRaindrops.back()->init(mMMatrixUniform[0]);
             rainTimer = 0;
         }
-
         if(!mRaindrops.empty())
         {
-            for (auto it : mRaindrops)
-            {
-                it->draw();
-                if (it->getZ() <= 0)
-                {
-                    mRaindrops.erase(mRaindrops.begin());
-                    rainDropCount--;
-                }
-            }
+            rainFall();
         }
     }
     else
     {
         if(!mRaindrops.empty())
         {
-            mRaindrops.clear();
+            rainFall();
+        }
+        else
+        {
             rainTimer = 0;
             rainDropCount = 0;
         }
@@ -291,10 +285,6 @@ void RenderWindow::render()
 
     movePlayer();
     ball->move(0.017f);
-
-    if(!mRaindrops.empty())
-        for (auto it : mRaindrops)
-            it->move(0.005f);
 
     //Calculate framerate before
     // checkForGLerrors() because that call takes a long time
@@ -421,6 +411,21 @@ void RenderWindow::startOpenGLDebugger()
                 mLogger->logText("Started Qt OpenGL debug logger");
         }
     }
+}
+
+void RenderWindow::rainFall()
+{
+    for (auto it : mRaindrops)
+    {
+        it->draw();
+        if (it->getZ() <= 0)
+        {
+            mRaindrops.erase(mRaindrops.begin());
+            rainDropCount--;
+        }
+    }
+    for (auto it : mRaindrops)
+        it->move(0.005f);
 }
 
 void RenderWindow::movePlayer()

@@ -69,14 +69,18 @@ void TriangleSurface::readFile(std::string filename)
                  xmin = vertex.getX();
              if(vertex.getY() < ymin)
                  ymin = vertex.getY();
+             if(vertex.getZ() < zmin)
+                 zmin = vertex.getZ();
              if(vertex.getX() > xmax)
                  xmax = vertex.getX();
              if(vertex.getY() > ymax)
                  ymax = vertex.getY();
+             if(vertex.getZ() > zmax)
+                 zmax = vertex.getZ();
         }
-        qDebug() << xmin << ymin;
-        qDebug() << xmax << ymax;
-        qDebug() << xmax - xmin << ymax - ymin;
+//        qDebug() << xmin << ymin;
+//        qDebug() << xmax << ymax;
+//        qDebug() << xmax - xmin << ymax - ymin;
 
 //        inn >> n;
 //        mIndices.reserve(n);
@@ -105,6 +109,16 @@ void TriangleSurface::writeFile(std::string filename)
             ut << *it << std::endl;
         }
         ut.close();
+    }
+}
+
+void TriangleSurface::origoFixer()
+{
+    for (unsigned int i = 0; i < mVertices.size(); i++)
+    {
+        mVertices.at(i).setXYZ(mVertices.at(i).getX()-xmin,
+                               mVertices.at(i).getY()-ymin,
+                               mVertices.at(i).getZ()-zmin);
     }
 }
 
@@ -152,10 +166,3 @@ void TriangleSurface::draw()
     glDrawElements(GL_TRIANGLES, GLsizei(mIndices.size()), GL_UNSIGNED_INT, reinterpret_cast<const void*>(0));
 }
 
-void TriangleSurface::origoFixer()
-{
-    for (unsigned int i = 0; i++; i < mVertices.size())
-    {
-        mVertices.at(i).setXYZ(mVertices.at(i).getX()-xmin, mVertices.at(i).getY()-ymin, mVertices.at(i).getZ()); //change to use zmin
-    };
-}

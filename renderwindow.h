@@ -114,6 +114,8 @@ private:
     ///Starts QOpenGLDebugLogger if possible
     void startOpenGLDebugger();
 
+    void rainFall();
+
 protected:
     //The QWindow that we inherit from have these functions to capture
     // - mouse and keyboard.

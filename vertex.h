@@ -24,8 +24,8 @@ public:
    float getX();
    float getY();
    float getZ();
-   void setNormal(QVector3D normal);
    void setXYZ(float x, float y, float z);
+   void setNormal(QVector3D normal);
 };
 
 #endif // VERTEX_H
