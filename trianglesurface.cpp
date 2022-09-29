@@ -119,7 +119,7 @@ void TriangleSurface::origoFixer()
     {
         mVertices.at(i).setXYZ(mVertices.at(i).getX()-xmin,
                                mVertices.at(i).getY()-ymin,
-                               mVertices.at(i).getZ()-zmax);
+                               mVertices.at(i).getZ()-zmax+20);
         //qDebug() << mVertices.at(i).getX() << mVertices.at(i).getY() << mVertices.at(i).getZ();
     }
 }
