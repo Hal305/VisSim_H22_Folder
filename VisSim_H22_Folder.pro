@@ -10,6 +10,7 @@ FORMS += \
 
 HEADERS += \
     barycentriccalc.h \
+    bsplinecurve.h \
     camera.h \
     input.h \
     light \
@@ -28,6 +29,7 @@ HEADERS += \
 
 SOURCES += \
     barycentriccalc.cpp \
+    bsplinecurve.cpp \
     camera.cpp \
     light.cpp \
     logger.cpp \

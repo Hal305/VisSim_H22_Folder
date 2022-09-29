@@ -25,11 +25,16 @@
 #include "rollingball.h"
 #include "raindrop.h"
 #include "barycentriccalc.h"
+#include "bsplinecurve.h"
 
 RenderWindow::RenderWindow(const QSurfaceFormat &format, MainWindow *mainWindow)
     : mContext(nullptr), mInitialized(false), mMainWindow(mainWindow)
-
 {
+    std::vector<int> t {0,0,0,1,2,2,3};
+    std::vector<QVector2D> c {{0,1},{1,0},{2,1},{3,0},{4,1}};
+    BSplineCurve spline(2, t, c);
+    qDebug() << spline.evaluateBSplineSample(1);
+
     //This is sent to QWindow:
     setSurfaceType(QWindow::OpenGLSurface);
     setFormat(format);

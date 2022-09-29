@@ -24,6 +24,7 @@ class TriangleSurface;
 class OctaBall;
 class RollingBall;
 class RainDrop;
+class BSplineCurve;
 
 /// This inherits from QWindow to get access to the Qt functionality and
 // OpenGL surface.
