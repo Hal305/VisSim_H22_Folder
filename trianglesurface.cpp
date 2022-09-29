@@ -13,11 +13,14 @@ TriangleSurface::TriangleSurface() : VisualObject()
 TriangleSurface::TriangleSurface(std::string filename) : VisualObject()
 {
     readFile(filename);
-    mIndices = {0,4,3,
-                0,1,4,
-                1,2,4,
-                2,5,4
-               };
+
+    origoFixer();
+
+//    mIndices = {0,4,3,
+//                0,1,4,
+//                1,2,4,
+//                2,5,4
+//               };
 
     //mMatrix.translate(-xmin, -ymin, -220);
 
@@ -147,4 +150,9 @@ void TriangleSurface::draw()
     glUniformMatrix4fv( mMatrixUniform, 1, GL_FALSE, mMatrix.constData());
     //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIBO);
     glDrawElements(GL_TRIANGLES, GLsizei(mIndices.size()), GL_UNSIGNED_INT, reinterpret_cast<const void*>(0));
+}
+
+void TriangleSurface::origoFixer()
+{
+
 }
