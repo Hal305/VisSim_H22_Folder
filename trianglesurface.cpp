@@ -23,23 +23,37 @@ TriangleSurface::TriangleSurface(std::string filename) : VisualObject()
         grid[x][y].setZ(mVertices[i].getZ());
     }
 
-    for (int i = 0; i < 12; i++)
+
+    mVertices.clear();
+    depth = 17, width = 12;
+    float c;
+    for (int i = 0; i < width; i++)
     {
-        for (int j = 0; j < 17; j++)
+        for (int j = 0; j < depth; j++)
         {
             grid[i][j].setX(i);
             grid[i][j].setY(j);
+            c = grid[i][j].z()/100;
+            Vertex v={grid[i][j].x()*2, grid[i][j].y()*2 , grid[i][j].z()/4, c,c,c, 0,0};
+            mVertices.push_back(v);
             qDebug() << grid[i][j];
         }
     }
 
-//    for(unsigned int i = 0; i < mVertices.size(); i++)
-//    {
-//        for(unsigned int j = 0; j < mVertices.size(); j++)
-//        {
+    for(int i = 0; i < width - 1; i++)       // for each row a.k.a. each strip
+    {
+        for(int j = 0; j < depth - 1; j++)      // for each column
+        {
+            int Vi = (i * depth) + j;
+            mIndices.push_back(Vi);
+            mIndices.push_back(Vi + 1);
+            mIndices.push_back(Vi + depth);
 
-//        }
-//    }
+            mIndices.push_back(Vi + depth +1);
+            mIndices.push_back(Vi + 1);
+            mIndices.push_back(Vi + depth);
+        }
+    }
 
     mMatrix.setToIdentity();
 }
@@ -150,17 +164,17 @@ void TriangleSurface::init(GLint matrixUniform)
 
 void TriangleSurface::draw()
 {
-//    initializeOpenGLFunctions();
-//    glBindVertexArray( mVAO );
-//    // GL_FALSE for QMatrix4x4
-//    glUniformMatrix4fv( mMatrixUniform, 1, GL_FALSE, mMatrix.constData());
-//    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIBO);
-//    glDrawElements(GL_TRIANGLES, GLsizei(mIndices.size()), GL_UNSIGNED_INT, reinterpret_cast<const void*>(0));
-
-    //GLDrawArrays for testing purposes
-    glBindVertexArray(mVAO);
+    initializeOpenGLFunctions();
+    glBindVertexArray( mVAO );
+    // GL_FALSE for QMatrix4x4
     glUniformMatrix4fv( mMatrixUniform, 1, GL_FALSE, mMatrix.constData());
-    glPointSize(10.0f);
-    glDrawArrays(GL_POINTS, 0, mVertices.size());
+    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIBO);
+    glDrawElements(GL_TRIANGLES, GLsizei(mIndices.size()), GL_UNSIGNED_INT, reinterpret_cast<const void*>(0));
+
+//    //GLDrawArrays for testing purposes
+//    glBindVertexArray(mVAO);
+//    glUniformMatrix4fv( mMatrixUniform, 1, GL_FALSE, mMatrix.constData());
+//    glPointSize(10.0f);
+//    glDrawArrays(GL_POINTS, 0, mVertices.size());
 }
 
