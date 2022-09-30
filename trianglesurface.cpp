@@ -16,6 +16,21 @@ TriangleSurface::TriangleSurface(std::string filename) : VisualObject()
 
     origoFixer();
 
+    for (unsigned int i = 0; i < mVertices.size(); i++)
+    {
+        int x = mVertices[i].getX()/10;
+        int y = mVertices[i].getY()/10;
+        grid[x][y].setZ(mVertices[i].getZ());
+    }
+
+    for (int i = 0; i < 12; i++)
+    {
+        for (int j = 0; j < 17; j++)
+        {
+            qDebug() << grid[i][j];
+        }
+    }
+
 //    for(unsigned int i = 0; i < mVertices.size(); i++)
 //    {
 //        for(unsigned int j = 0; j < mVertices.size(); j++)
@@ -89,11 +104,11 @@ void TriangleSurface::origoFixer()
     width = xmax - xmin, depth = ymax - ymin, height = zmax - zmin;
     for (unsigned int i = 0; i < mVertices.size(); i++)
     {
-        mVertices.at(i).setXYZ(mVertices.at(i).getX()-xmin-width/2,
-                               mVertices.at(i).getY()-ymin-depth/2,
-                               mVertices.at(i).getZ()-zmax+20);
+        mVertices.at(i).setXYZ(mVertices.at(i).getX()-xmin,
+                               mVertices.at(i).getY()-ymin,
+                               mVertices.at(i).getZ()-zmin);
         //mVertices.at(i).setNormal(QVector3D(0,0,0));
-        //qDebug() << mVertices.at(i).getX() << mVertices.at(i).getY() << mVertices.at(i).getZ();
+//        qDebug() << mVertices.at(i).getX() << mVertices.at(i).getY() << mVertices.at(i).getZ();
     }
 }
 
