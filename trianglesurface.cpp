@@ -33,8 +33,11 @@ TriangleSurface::TriangleSurface(std::string filename) : VisualObject()
         {
             grid[i][j].setX(i);
             grid[i][j].setY(j);
+            float x = (grid[i][j].x() -width/2)*2;
+            float y = (grid[i][j].y() -depth/2)*2;
+            float z = (grid[i][j].z()/4 -10);
             c = grid[i][j].z()/100;
-            Vertex v={grid[i][j].x()*2, grid[i][j].y()*2 , grid[i][j].z()/4, c,c,c, 0,0};
+            Vertex v = {x,y,z, c,c,c, 0,0};
             mVertices.push_back(v);
             qDebug() << grid[i][j];
         }
@@ -46,8 +49,8 @@ TriangleSurface::TriangleSurface(std::string filename) : VisualObject()
         {
             int Vi = (i * depth) + j;
             mIndices.push_back(Vi);
-            mIndices.push_back(Vi + 1);
             mIndices.push_back(Vi + depth);
+            mIndices.push_back(Vi + 1);
 
             mIndices.push_back(Vi + depth +1);
             mIndices.push_back(Vi + 1);
@@ -123,9 +126,38 @@ void TriangleSurface::origoFixer()
         mVertices.at(i).setXYZ(mVertices.at(i).getX()-xmin,
                                mVertices.at(i).getY()-ymin,
                                mVertices.at(i).getZ()-zmin);
-        //mVertices.at(i).setNormal(QVector3D(0,0,0));
-//        qDebug() << mVertices.at(i).getX() << mVertices.at(i).getY() << mVertices.at(i).getZ();
     }
+}
+
+float TriangleSurface::heightCalc(float x, float y)
+{
+    QVector2D P = {0,0}, Q = {0,0}, R = {0,0};
+    int i = y + depth/2;
+    int j = x + width/2;
+    float z = 0;
+    float Vi = (i * depth) + j;
+    if(j>0 && j<width && i>0 && i<depth)
+    {
+        BarycentricCalc bc(QVector2D{x, y});
+        P.setX(mVertices[Vi].getX()), P.setY(mVertices[Vi].getY());
+        Q.setX(mVertices[Vi+width].getX()), Q.setY(mVertices[Vi+width].getY());
+        R.setX(mVertices[Vi+1].getX()), R.setY(mVertices[Vi+1].getY());
+        if(Q.x()==P.x())
+        {
+            Q.setX(mVertices[Vi-1].getX()), Q.setY(mVertices[Vi-1].getY());
+            R.setX(mVertices[Vi-width].getX()), R.setY(mVertices[Vi-width].getY());
+        }
+        QVector3D baryc = bc.calculate(P,Q,R);
+        float u = baryc.x(), v = baryc.y(), w = baryc.z();
+        //f(x,y) = u * f(Px,Py) + v * f(Qx,Qy) + w * f(Rx,Ry)
+        float mP = u * mVertices[Vi].getZ();
+        float mQ = v * mVertices[Vi+width].getZ();
+        float mR = w * mVertices[Vi+1].getZ();
+        z = 0.1 + (mP + mQ + mR);
+    }
+    else
+        z = -1000;
+    return z;
 }
 
 void TriangleSurface::init(GLint matrixUniform)

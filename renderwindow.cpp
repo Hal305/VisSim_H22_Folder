@@ -150,9 +150,6 @@ void RenderWindow::init()
     dynamic_cast<RollingBall*>(ball)->setSurface(surface);
     mObjects.push_back(ball);
 
-//    rain = new RainDrop(2, 0, 0);
-//    mObjects.push_back(rain);
-
     mLight = new Light(mShaders[0]->getProgram());
     mLight->setName("light");
     mLight->mMatrix.translate(1.f, 1.f, 1.f);
