@@ -27,6 +27,8 @@ TriangleSurface::TriangleSurface(std::string filename) : VisualObject()
     {
         for (int j = 0; j < 17; j++)
         {
+            grid[i][j].setX(i);
+            grid[i][j].setY(j);
             qDebug() << grid[i][j];
         }
     }
