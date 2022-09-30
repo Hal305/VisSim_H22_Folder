@@ -32,6 +32,7 @@ public:
 protected:
     std::vector<Vertex> mVertices;
     std::vector<GLuint> mIndices;
+    std::vector<Vertex::Triangle> mTriangles;
 
     GLuint mVAO{0};
     GLuint mVBO{0};

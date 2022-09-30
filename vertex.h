@@ -21,6 +21,11 @@ public:
    Vertex(float x, float y, float z, float r, float g, float b);
    Vertex(float x, float y, float z, float r, float g, float b, float u, float v);
    Vertex(QVector3D a, QVector3D b, QVector2D c);
+   struct Triangle
+   {
+       int indexes[3];
+       int neighbours[3];
+   };
    float getX();
    float getY();
    float getZ();

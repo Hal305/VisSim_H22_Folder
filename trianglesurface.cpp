@@ -16,37 +16,20 @@ TriangleSurface::TriangleSurface(std::string filename) : VisualObject()
 
     origoFixer();
 
-//    mIndices = {0,4,3,
-//                0,1,4,
-//                1,2,4,
-//                2,5,4
-//               };
+//    for(unsigned int i = 0; i < mVertices.size(); i++)
+//    {
+//        for(unsigned int j = 0; j < mVertices.size(); j++)
+//        {
 
-    //mMatrix.translate(-xmin, -ymin, -220);
-
-//    v0 = {mVertices[0].getX(), mVertices[0].getY(), mVertices[0].getZ()},
-//    v1 = {mVertices[1].getX(), mVertices[1].getY(), mVertices[1].getZ()},
-//    v2 = {mVertices[2].getX(), mVertices[2].getY(), mVertices[2].getZ()},
-//    v3 = {mVertices[3].getX(), mVertices[3].getY(), mVertices[3].getZ()},
-//    v4 = {mVertices[4].getX(), mVertices[4].getY(), mVertices[4].getZ()},
-//    v5 = {mVertices[5].getX(), mVertices[5].getY(), mVertices[5].getZ()};
-
-//    n0 = QVector3D::normal(v0, v4, v3),
-//    n1 = QVector3D::normal(v0, v1, v4),
-//    n2 = QVector3D::normal(v1, v2, v4),
-//    n3 = QVector3D::normal(v2, v5, v4);
-
-    //qDebug() << n0.x() << n0.y() << n0.z();
+//        }
+//    }
 
     mMatrix.setToIdentity();
-    //mMatrix.translate(0,0,5);
 }
 
 TriangleSurface::~TriangleSurface()
 {
-    //qDebug() << "TriangleSurface::~TriangleSurface()";
-   //delete [] m_vertices;
-    //qDebug() << "TriangleSurface::~TriangleSurface() - vertices deleted";
+
 }
 
 void TriangleSurface::readFile(std::string filename)
@@ -64,7 +47,6 @@ void TriangleSurface::readFile(std::string filename)
         {
              inn >> vertex;
              mVertices.push_back(vertex);
-             //qDebug() << "x = " << vertex.getX() <<  "y = " << vertex.getY()<< "z = " << vertex.getZ();
              if(vertex.getX() < xmin)
                  xmin = vertex.getX();
              if(vertex.getY() < ymin)
@@ -78,17 +60,6 @@ void TriangleSurface::readFile(std::string filename)
              if(vertex.getZ() > zmax)
                  zmax = vertex.getZ();
         }
-//        qDebug() << xmin << ymin;
-//        qDebug() << xmax << ymax;
-//        qDebug() << zmin;
-//        qDebug() << xmax - xmin << ymax - ymin;
-
-//        inn >> n;
-//        mIndices.reserve(n);
-//        for(int i=0; i<n; i++)
-//        {
-//            mIndices.push_back(i);
-//        }
         inn.close();
     }
 }
@@ -115,11 +86,13 @@ void TriangleSurface::writeFile(std::string filename)
 
 void TriangleSurface::origoFixer()
 {
+    width = xmax - xmin, depth = ymax - ymin, height = zmax - zmin;
     for (unsigned int i = 0; i < mVertices.size(); i++)
     {
-        mVertices.at(i).setXYZ(mVertices.at(i).getX()-xmin,
-                               mVertices.at(i).getY()-ymin,
+        mVertices.at(i).setXYZ(mVertices.at(i).getX()-xmin-width/2,
+                               mVertices.at(i).getY()-ymin-depth/2,
                                mVertices.at(i).getZ()-zmax+20);
+        //mVertices.at(i).setNormal(QVector3D(0,0,0));
         //qDebug() << mVertices.at(i).getX() << mVertices.at(i).getY() << mVertices.at(i).getZ();
     }
 }
@@ -170,6 +143,7 @@ void TriangleSurface::draw()
     //GLDrawArrays for testing purposes
     glBindVertexArray(mVAO);
     glUniformMatrix4fv( mMatrixUniform, 1, GL_FALSE, mMatrix.constData());
-    glDrawArrays(GL_TRIANGLES, 0, mVertices.size());
+    glPointSize(10.0f);
+    glDrawArrays(GL_POINTS, 0, mVertices.size());
 }
 
