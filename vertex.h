@@ -23,6 +23,7 @@ public:
    Vertex(QVector3D a, QVector3D b, QVector2D c);
    struct Triangle
    {
+       Triangle(int i0, int i1, int i2, int n0, int n1, int n2);
        int indexes[3];
        int neighbours[3];
    };

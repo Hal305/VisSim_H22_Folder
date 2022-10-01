@@ -25,7 +25,6 @@ TriangleSurface::TriangleSurface(std::string filename, GLuint ShaderId, GLuint T
         grid[x][y].setZ(mVertices[i].getZ());
     }
 
-
     mVertices.clear();
     depth = 17, width = 12;
     float c;
@@ -41,6 +40,7 @@ TriangleSurface::TriangleSurface(std::string filename, GLuint ShaderId, GLuint T
             c = grid[i][j].z()/100;
             Vertex v = {x,y,z, c,c,c, 0,0};
             mVertices.push_back(v);
+//            mTriangles
             //qDebug() << grid[i][j];
         }
     }
@@ -181,7 +181,7 @@ void TriangleSurface::normalize()
             n += QVector3D::normal(V0, V6, V1); //T5
             n/=vcount;
             n.normalize();
-            qDebug() << n;
+            //qDebug() << n;
             mVertices[Vi].setNormal(n);
         }
     }
@@ -216,6 +216,11 @@ float TriangleSurface::heightCalc(float x, float y)
     else
         z = -1000;
     return z;
+}
+
+void TriangleSurface::shaderToggle(GLuint ShaderId)
+{
+    mShaderId = ShaderId;
 }
 
 void TriangleSurface::init(GLint matrixUniform)

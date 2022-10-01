@@ -43,6 +43,7 @@ public:
     void exposeEvent(QExposeEvent *) override;  //gets called when app is shown and resized
 
     void setupShader(int index);
+    void shaderToggle();
 
     bool bWireFrame {false};
     bool bRaining {false};
@@ -61,7 +62,7 @@ private:
     std::unordered_map<std::string, VisualObject*> mMap;    //Hash container
     gsml::QuadTree<std::string, VisualObject*> mQuadTree;   //Quadtree
 
-    VisualObject* surface {nullptr};
+    TriangleSurface* surface {nullptr};
     VisualObject* ball {nullptr};
     VisualObject* rain {nullptr};
     std::vector<RainDrop*> mRaindrops;
@@ -116,6 +117,8 @@ private:
     ///Starts QOpenGLDebugLogger if possible
     void startOpenGLDebugger();
 
+
+    bool bShader {true};
     void rainFall();
 
 protected:

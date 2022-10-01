@@ -104,6 +104,11 @@ void MainWindow::on_rainButton_toggled(bool checked)
     }
 }
 
+void MainWindow::on_toggleRender_toggled()
+{
+    mRenderWindow->shaderToggle();
+}
+
 //File menu Exit closes the program
 void MainWindow::on_fileExit_triggered()
 {

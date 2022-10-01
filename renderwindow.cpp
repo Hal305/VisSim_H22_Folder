@@ -442,6 +442,21 @@ void RenderWindow::startOpenGLDebugger()
     }
 }
 
+void RenderWindow::shaderToggle()
+{
+    bShader = !bShader;
+    if(bShader)
+    {
+        surface->shaderToggle(mShaders[2]->getProgram());
+        surface->init(mMMatrixUniform[2]);
+    }
+    else
+    {
+        surface->shaderToggle(mShaders[0]->getProgram());
+        surface->init(mMMatrixUniform[0]);
+    }
+}
+
 void RenderWindow::rainFall()
 {
     for (auto it : mRaindrops)
@@ -529,7 +544,7 @@ void RenderWindow::keyPressEvent(QKeyEvent *event)
 
     if(event->key() == Qt::Key_Space)
     {
-//        npc->setPath();
+        //shaderToggle();
     }
 }
 

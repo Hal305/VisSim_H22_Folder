@@ -75,3 +75,13 @@ std::istream& operator>> (std::istream& is, Vertex& v) {
   return is;
 }
 
+
+Vertex::Triangle::Triangle(int i0, int i1, int i2, int n0, int n1, int n2)
+{
+    indexes[0] = i0;
+    indexes[1] = i1;
+    indexes[2] = i2;
+    neighbours[0] = n0;
+    neighbours[1] = n1;
+    neighbours[2] = n2;
+}

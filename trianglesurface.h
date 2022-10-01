@@ -15,6 +15,7 @@ public:
     void origoFixer();
     void normalize();
     float heightCalc(float x, float y);
+    void shaderToggle(GLuint ShaderId);
     void init(GLint matrixUniform) override;
     void draw() override;
     std::vector<Vertex>& get_vertices() { return mVertices; } // 191120
