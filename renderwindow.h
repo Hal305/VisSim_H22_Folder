@@ -18,6 +18,7 @@ class Input;
 class Shader;
 class MainWindow;
 class Logger;
+class Texture;
 class Light;
 class XYZ;
 class TriangleSurface;
@@ -75,6 +76,7 @@ private:
     bool mInitialized{false};
 
     std::vector<Shader*> mShaders;    //holds pointer the GLSL shader program
+    std::vector<Texture*> mTextures;
     static const int uniforms = 2;
     std::vector<GLint> mMMatrixUniform;          //OpenGL reference to the Uniform in the shader program
     std::vector<GLint> mVMatrixUniform;

@@ -18,6 +18,7 @@
 #include "shader.h"
 #include "mainwindow.h"
 #include "logger.h"
+#include "texture.h"
 #include "light.h"
 #include "xyz.h"
 #include "trianglesurface.h"
@@ -128,11 +129,25 @@ void RenderWindow::init()
     // (out of the build-folder) and then up into the project folder.
     mShaders.push_back(new Shader("../VisSim_H22_Folder/plainshader.vert", "../VisSim_H22_Folder/plainshader.frag"));
     mLogger->logText("Plain shader program id: " + std::to_string(mShaders.back()->getProgram()) );
-    mShaders.push_back( new Shader("../VisSim_H22_Folder/PhongShader.vert", "../VisSim_H22_Folder/PhongShader.frag"));
+    mShaders.push_back(new Shader("../VisSim_H22_Folder/textureshader.vert", "../VisSim_H22_Folder/textureshader.frag"));
+    mLogger->logText("Texture shader program id: " + std::to_string(mShaders.back()->getProgram()) );
+    mShaders.push_back( new Shader("../VisSim_H22_Folder/phongshader.vert", "../VisSim_H22_Folder/phongshader.frag"));
     mLogger->logText("Texture shader program id: " + std::to_string(mShaders.back()->getProgram()) );
 
     for(unsigned int i = 0; i < mShaders.size(); i++)
     setupShader(i);
+
+    //********************** Texture stuff: **********************
+    //Returns a pointer to the Texture class. This reads and sets up the texture for OpenGL
+    //and returns the Texture ID that OpenGL uses from Texture::id()
+    mTextures.push_back(new Texture);
+    mTextures.push_back(new Texture("../VisSim_H22_Folder/hund.bmp"));
+
+    //Set the textures loaded to a texture unit (also called a texture slot)
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, mTextures[0]->id());
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, mTextures[1]->id());
 
     mMMatrix = new QMatrix4x4{};
     mMMatrix->setToIdentity();    //1, 1, 1, 1 in the diagonal of the matrix
@@ -144,13 +159,14 @@ void RenderWindow::init()
     temp->setName("xyz");
     mObjects.push_back(temp);
 
-    surface = new TriangleSurface("../VisSim_H22_Folder/terrain.txt");
+    surface = new TriangleSurface("../VisSim_H22_Folder/terrain.txt",
+                                  mShaders[2]->getProgram(), mTextures[0]->id());
     mObjects.push_back(surface);
     ball = new RollingBall(3);
     dynamic_cast<RollingBall*>(ball)->setSurface(surface);
     mObjects.push_back(ball);
 
-    mLight = new Light(mShaders[0]->getProgram());
+    mLight = new Light(mShaders[0]->getProgram(), mTextures[0]->id());
     mLight->setName("light");
     mLight->mMatrix.translate(1.f, 1.f, 1.f);
     mObjects.push_back(mLight);
@@ -178,6 +194,10 @@ void RenderWindow::init()
         {
             it->init(mMMatrixUniform[1]);
         }
+        else if(it->getShaderId()==mShaders[2]->getProgram())
+        {
+            it->init(mMMatrixUniform[2]);
+        }
         else
         {
             it->init(mMMatrixUniform[0]);
@@ -189,21 +209,25 @@ void RenderWindow::init()
 
 void RenderWindow::setupShader(int index)
 {
-    mMMatrixUniform.push_back(glGetUniformLocation(mShaders[index]->getProgram(), "mMatrix"));
-    mVMatrixUniform.push_back(glGetUniformLocation(mShaders[index]->getProgram(), "vMatrix"));
-    mPMatrixUniform.push_back(glGetUniformLocation(mShaders[index]->getProgram(), "pMatrix"));
-    if(index == 2)
-        {
-            mLightColorUniform = glGetUniformLocation( mShaders[index]->getProgram(), "lightColor" );
-            mObjectColorUniform = glGetUniformLocation( mShaders[index]->getProgram(), "objectColor" );
-            mAmbientLightStrengthUniform = glGetUniformLocation( mShaders[index]->getProgram(), "ambientStrength" );
-            mLightPositionUniform = glGetUniformLocation( mShaders[index]->getProgram(), "lightPosition" );
-            mSpecularStrengthUniform = glGetUniformLocation( mShaders[index]->getProgram(), "specularStrength" );
-            mSpecularExponentUniform = glGetUniformLocation( mShaders[index]->getProgram(), "specularExponent" );
-            mLightPowerUniform = glGetUniformLocation( mShaders[index]->getProgram(), "lightPower" );
-            mCameraPositionUniform = glGetUniformLocation( mShaders[index]->getProgram(), "cameraPosition" );
-            mTextureUniform2 = glGetUniformLocation(mShaders[index]->getProgram(), "textureSampler");
-        }
+    {
+        mMMatrixUniform.push_back(glGetUniformLocation(mShaders[index]->getProgram(), "mMatrix"));
+        mVMatrixUniform.push_back(glGetUniformLocation(mShaders[index]->getProgram(), "vMatrix"));
+        mPMatrixUniform.push_back(glGetUniformLocation(mShaders[index]->getProgram(), "pMatrix"));
+        if(index == 1)
+            mTextureUniform = glGetUniformLocation(mShaders[index]->getProgram(), "textureSampler");
+        if(index == 2)
+            {
+                mLightColorUniform = glGetUniformLocation( mShaders[index]->getProgram(), "lightColor" );
+                mObjectColorUniform = glGetUniformLocation( mShaders[index]->getProgram(), "objectColor" );
+                mAmbientLightStrengthUniform = glGetUniformLocation( mShaders[index]->getProgram(), "ambientStrength" );
+                mLightPositionUniform = glGetUniformLocation( mShaders[index]->getProgram(), "lightPosition" );
+                mSpecularStrengthUniform = glGetUniformLocation( mShaders[index]->getProgram(), "specularStrength" );
+                mSpecularExponentUniform = glGetUniformLocation( mShaders[index]->getProgram(), "specularExponent" );
+                mLightPowerUniform = glGetUniformLocation( mShaders[index]->getProgram(), "lightPower" );
+                mCameraPositionUniform = glGetUniformLocation( mShaders[index]->getProgram(), "cameraPosition" );
+                mTextureUniform2 = glGetUniformLocation(mShaders[index]->getProgram(), "textureSampler");
+            }
+    }
 }
 
 // Called each frame - doing the rendering!!!
@@ -224,9 +248,17 @@ void RenderWindow::render()
     for(auto it : mObjects){
         if((*it).getShaderId()==mShaders[1]->getProgram())
         {
-            glUseProgram(mShaders[1]->getProgram());
-            glUniformMatrix4fv(mVMatrixUniform[1], 1, GL_FALSE, mCamera->mVMatrix.constData());
-            glUniformMatrix4fv(mPMatrixUniform[1], 1, GL_FALSE, mCamera->mPMatrix.constData());
+            glUniformMatrix4fv(mVMatrixUniform[1], 2, GL_FALSE, mCamera->mVMatrix.constData());
+            glUniformMatrix4fv(mPMatrixUniform[1], 2, GL_FALSE, mCamera->mPMatrix.constData());
+            //            glUniform1i(mTextureUniform, 1);
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_2D, (*it).getTexId());
+        }
+        else if((*it).getShaderId()==mShaders[2]->getProgram())
+        {
+            glUseProgram(mShaders[2]->getProgram());
+            glUniformMatrix4fv(mVMatrixUniform[2], 1, GL_FALSE, mCamera->mVMatrix.constData());
+            glUniformMatrix4fv(mPMatrixUniform[2], 1, GL_FALSE, mCamera->mPMatrix.constData());
             //            glUniform1i(mTextureUniform, 1);
             glUniform3f(mLightPositionUniform, mLight->mMatrix.column(3).x(), mLight->mMatrix.column(3).y(), mLight->mMatrix.column(3).z());
             glUniform3f(mCameraPositionUniform, mCamera->position().x(), mCamera->position().y(), mCamera->position().z());
@@ -414,7 +446,10 @@ void RenderWindow::rainFall()
 {
     for (auto it : mRaindrops)
     {
-        it->draw();
+        if(bWireFrame)
+            it->drawLines();
+        else
+            it->draw();
         if (it->getZ() <= 0)
         {
             mRaindrops.erase(mRaindrops.begin());

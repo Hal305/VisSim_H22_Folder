@@ -10,8 +10,10 @@ TriangleSurface::TriangleSurface() : VisualObject()
 
 }
 
-TriangleSurface::TriangleSurface(std::string filename) : VisualObject()
+TriangleSurface::TriangleSurface(std::string filename, GLuint ShaderId, GLuint TextureId) : VisualObject()
 {
+    mShaderId = ShaderId;
+    mTextureId = TextureId;
     readFile(filename);
 
     origoFixer();
@@ -39,7 +41,7 @@ TriangleSurface::TriangleSurface(std::string filename) : VisualObject()
             c = grid[i][j].z()/100;
             Vertex v = {x,y,z, c,c,c, 0,0};
             mVertices.push_back(v);
-            qDebug() << grid[i][j];
+            //qDebug() << grid[i][j];
         }
     }
 
@@ -57,6 +59,7 @@ TriangleSurface::TriangleSurface(std::string filename) : VisualObject()
             mIndices.push_back(Vi + depth);
         }
     }
+    normalize();
 
     mMatrix.setToIdentity();
 }
@@ -126,6 +129,61 @@ void TriangleSurface::origoFixer()
         mVertices.at(i).setXYZ(mVertices.at(i).getX()-xmin,
                                mVertices.at(i).getY()-ymin,
                                mVertices.at(i).getZ()-zmin);
+    }
+}
+
+void TriangleSurface::normalize()
+{
+    for(int i = 0; i < width-1; i++)
+    {
+        for(int j = 0; j < depth-1; j++)
+        {
+            float Vi = i * depth + j; //Current vertex
+            int vcount = 0;
+            QVector3D n = {0,0,0};
+            QVector3D V0, V1, V2, V3, V4, V5, V6 = {0, 0, 1};
+            V0 = {Vi, Vi, mVertices[Vi].getZ()};
+            if(Vi - width >= 0)
+            {   //Lower vertex
+                V1 = {Vi, Vi - width, mVertices[Vi - width].getZ()};
+                vcount++;
+            }
+            if(Vi + 1 <= width && Vi - width >= 0)
+            {   //Lower right vertex
+                V2 = {Vi + 1, Vi - width, mVertices[Vi - width + 1].getZ()};
+                vcount++;
+            }
+            if(Vi + 1 <= width)
+            {   //Right vertex
+                V3 = {Vi + 1, Vi, mVertices[Vi + 1].getZ()};
+                vcount++;
+            }
+            if(Vi + width <= depth)
+            {   //Upper vertex
+                V4 = {Vi, Vi + width, mVertices[Vi + width].getZ()};
+                vcount++;
+            }
+            if(Vi + width <= depth && Vi - 1 >= 0)
+            {   //Upper left vertex
+                V5 = {Vi -1, Vi + width, mVertices[Vi + width - 1].getZ()};
+                vcount++;
+            }
+            if(Vi - 1 >= 0)
+            {   //Left vertex
+                V6 = {Vi -1, Vi, mVertices[Vi - 1].getZ()};
+                vcount++;
+            }
+            n += QVector3D::normal(V0, V2, V1); //T0
+            n += QVector3D::normal(V0, V3, V2); //T1
+            n += QVector3D::normal(V0, V4, V3); //T2
+            n += QVector3D::normal(V0, V5, V4); //T3
+            n += QVector3D::normal(V0, V6, V5); //T4
+            n += QVector3D::normal(V0, V6, V1); //T5
+            n/=vcount;
+            n.normalize();
+            qDebug() << n;
+            mVertices[Vi].setNormal(n);
+        }
     }
 }
 

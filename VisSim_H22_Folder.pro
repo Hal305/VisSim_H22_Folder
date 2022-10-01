@@ -13,7 +13,7 @@ HEADERS += \
     bsplinecurve.h \
     camera.h \
     input.h \
-    light \
+    light.h \
     logger.h \
     mainwindow.h \
     octaball.h \
@@ -22,6 +22,7 @@ HEADERS += \
     renderwindow.h \
     rollingball.h \
     shader.h \
+    texture.h \
     trianglesurface.h \
     vertex.h \
     visualobject.h \
@@ -40,6 +41,7 @@ SOURCES += \
     renderwindow.cpp \
     rollingball.cpp \
     shader.cpp \
+    texture.cpp \
     trianglesurface.cpp \
     vertex.cpp \
     visualobject.cpp \
@@ -49,4 +51,6 @@ DISTFILES += \
     phongshader.frag \
     phongshader.vert \
     plainshader.frag \
-    plainshader.vert
+    plainshader.vert \
+    textureshader.frag \
+    textureshader.vert

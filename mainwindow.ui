@@ -7,11 +7,11 @@
     <x>0</x>
     <y>0</y>
     <width>1600</width>
-    <height>1000</height>
+    <height>900</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>3D programming</string>
+   <string>VisSim folder</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout">

@@ -17,9 +17,10 @@ Light::Light()
     mMatrix.setToIdentity();
 }
 
-Light::Light(GLuint ShaderId)
+Light::Light(GLuint ShaderId, GLuint TextureId)
 {
     mShaderId=ShaderId;
+    mTextureId=TextureId;
     mVertices.push_back(Vertex{-0.25,-0.25,0.25,0.8f,0.8f,0.3f,0,0});
     mVertices.push_back(Vertex{0.25,-0.25,0.25,0.8f,0.8f,0.3f,1.f,0});
     mVertices.push_back(Vertex{0,0.25,0,0.8f,0.8f,0.3f,0.5,0.5});

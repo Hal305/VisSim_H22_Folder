@@ -9,7 +9,7 @@ class Light : public VisualObject
 public:
     ///Light class with mesh and light parameters
     Light();
-    Light(GLuint ShaderId);
+    Light(GLuint ShaderId, GLuint TextureId);
     virtual void init(GLint MatrixUniform) override;
     virtual void draw() override;
 

@@ -8,11 +8,12 @@ class TriangleSurface : public VisualObject
 {
 public:
     TriangleSurface();
-    TriangleSurface(std::string filename);
+    TriangleSurface(std::string filename, GLuint ShaderId, GLuint TextureId);
     ~TriangleSurface() override;
     void readFile(std::string filename);
     void writeFile(std::string filename);
     void origoFixer();
+    void normalize();
     float heightCalc(float x, float y);
     void init(GLint matrixUniform) override;
     void draw() override;
