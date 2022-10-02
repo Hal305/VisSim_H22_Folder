@@ -17,46 +17,7 @@ TriangleSurface::TriangleSurface(std::string filename, GLuint ShaderId, GLuint T
     readFile(filename);
 
     origoFixer();
-
-    for (unsigned int i = 0; i < mVertices.size(); i++)
-    {
-        int x = mVertices[i].getX()/10;
-        int y = mVertices[i].getY()/10;
-        grid[x][y].setZ(mVertices[i].getZ());
-    }
-
-    mVertices.clear();
-    depth = 17, width = 12;
-    for (int i = 0; i < width; i++)
-    {
-        for (int j = 0; j < depth; j++)
-        {
-            grid[i][j].setX(i);
-            grid[i][j].setY(j);
-            float x = (grid[i][j].x() -width/2)*2;
-            float y = (grid[i][j].y() -depth/2)*2;
-            float z = (grid[i][j].z()/4 -10);
-            Vertex v = {x,y,z, 0,0,0, 0,0};
-            mVertices.push_back(v);
-            //qDebug() << grid[i][j];
-        }
-    }
-
-    for(int i = 0; i < width - 1; i++)       // for each row a.k.a. each strip
-    {
-        for(int j = 0; j < depth - 1; j++)      // for each column
-        {
-            int Vi = (i * depth) + j;
-            mIndices.push_back(Vi);         //Lower left
-            mIndices.push_back(Vi + depth); //Lower right
-            mIndices.push_back(Vi + 1);     //Upper left
-
-            mIndices.push_back(Vi + depth +1);  //Upper right
-            mIndices.push_back(Vi + 1);
-            mIndices.push_back(Vi + depth);
-        }
-    }
-
+    construct();
     triangulate();
     normalize();
 
@@ -131,16 +92,59 @@ void TriangleSurface::origoFixer()
     }
 }
 
+void TriangleSurface::construct()
+{
+    for (unsigned int i = 0; i < mVertices.size(); i++)
+    {
+        int x = mVertices[i].getX()/10;
+        int y = mVertices[i].getY()/10;
+        grid[x][y].setZ(mVertices[i].getZ());
+    }
+
+    mVertices.clear();
+    depth = 17, width = 12;
+    for (int i = 0; i < width; i++)
+    {
+        for (int j = 0; j < depth; j++)
+        {
+            grid[i][j].setX(i);
+            grid[i][j].setY(j);
+            float x = (grid[i][j].x() -width/2)*2;
+            float y = (grid[i][j].y() -depth/2)*2;
+            float z = (grid[i][j].z()/4 -10);
+            Vertex v = {x,y,z, 0,0,0, 0,0};
+            mVertices.push_back(v);
+            //qDebug() << grid[i][j];
+        }
+    }
+
+    for(int i = 0; i < width - 1; i++)       // for each row a.k.a. each strip
+    {
+        for(int j = 0; j < depth - 1; j++)      // for each column
+        {
+            int Vi = (i * depth) + j;
+            mIndices.push_back(Vi);         //Lower left
+            mIndices.push_back(Vi + depth); //Lower right
+            mIndices.push_back(Vi + 1);     //Upper left
+
+            mIndices.push_back(Vi + depth +1);  //Upper right
+            mIndices.push_back(Vi + 1);
+            mIndices.push_back(Vi + depth);
+        }
+    }
+}
+
 void TriangleSurface::triangulate()
 {
+    int t = 0;
     int size = (width-1)*(depth-1)*2;
     int yloop = 32; //used to check if we've looped the grid on the y axis
     int n0, n1, n2; //neighbours
-    for(int i = 0; i < size; i++) // +1 per triangle, 2 triangles at a time
+    for(unsigned int i = 0; i < mIndices.size(); i+=6) // +1 per triangle, 2 triangles at a time
     {
         //Bottom left triangle, even numbered triangles
-        n0 = i + 1;     //the neighbour above
-        n1 = i - 31;    //the neighbour to the left
+        n0 = t + 1;     //the neighbour above
+        n1 = t - 31;    //the neighbour to the left
         if(n1 < 0)      //check to see if n1 is outside the grid
             n1 = -1;
 
@@ -151,26 +155,28 @@ void TriangleSurface::triangulate()
             //qDebug() << "Y loop reset";
         }
         else            //the neighbour below if we're not at the bottom of the grid
-            n2 = i - 1;
-        //qDebug() << i << mIndices[i] << n0 << n1 << n2;
+            n2 = t - 1;
         Vertex::Triangle tEven(mIndices.at(i), mIndices.at(i + 1), mIndices.at(i + 2), n0, n1, n2);
         mTriangles.push_back(tEven);
+        //qDebug() << "t" << t << ": " << mIndices[i] << mIndices[i + 1] << mIndices[i + 2] << n0 << n1 << n2;
+        t++;
 
-        i++; //Increments for odd triangle
         //Top right triangle, odd numbered triangles
-        n0 = i + 31;    //the neighbour to the right
-        if(n0 > size)
+        n0 = t + 31;    //the neighbour to the right
+        if(n0 >= size)
             n0 = -1;
 
-        n1 = i + 1;     //the neighbour above
         if(yloop == 30) //using yloop to see if we're at the top of the grid
             n1 = -1;
+        else
+            n1 = t + 1;     //the neighbour above
 
-        n2 = i - 1;     //the neighbour below
+        n2 = t - 1;     //the neighbour below
         Vertex::Triangle tOdd(mIndices.at(i), mIndices.at(i + 1), mIndices.at(i + 2), n0, n1, n2);
         mTriangles.push_back(tOdd);
-        //qDebug() << i << mIndices[i] << n0 << n1 << n2;
+        //qDebug() << "t" << t << ": "<< mIndices[i+3] << mIndices[i + 4] << mIndices[i + 5] << n0 << n1 << n2;
         yloop += 2;     //moving two times up the grid
+        t++;
     }
 }
 
