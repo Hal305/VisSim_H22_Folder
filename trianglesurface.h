@@ -13,6 +13,7 @@ public:
     void readFile(std::string filename);
     void writeFile(std::string filename);
     void origoFixer();
+    void triangulate();
     void normalize();
     float heightCalc(float x, float y);
     void shaderToggle(GLuint ShaderId);

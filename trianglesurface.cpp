@@ -27,7 +27,6 @@ TriangleSurface::TriangleSurface(std::string filename, GLuint ShaderId, GLuint T
 
     mVertices.clear();
     depth = 17, width = 12;
-    float c;
     for (int i = 0; i < width; i++)
     {
         for (int j = 0; j < depth; j++)
@@ -37,10 +36,8 @@ TriangleSurface::TriangleSurface(std::string filename, GLuint ShaderId, GLuint T
             float x = (grid[i][j].x() -width/2)*2;
             float y = (grid[i][j].y() -depth/2)*2;
             float z = (grid[i][j].z()/4 -10);
-            c = grid[i][j].z()/100;
-            Vertex v = {x,y,z, c,c,c, 0,0};
+            Vertex v = {x,y,z, 0,0,0, 0,0};
             mVertices.push_back(v);
-//            mTriangles
             //qDebug() << grid[i][j];
         }
     }
@@ -50,15 +47,17 @@ TriangleSurface::TriangleSurface(std::string filename, GLuint ShaderId, GLuint T
         for(int j = 0; j < depth - 1; j++)      // for each column
         {
             int Vi = (i * depth) + j;
-            mIndices.push_back(Vi);
-            mIndices.push_back(Vi + depth);
-            mIndices.push_back(Vi + 1);
+            mIndices.push_back(Vi);         //Lower left
+            mIndices.push_back(Vi + depth); //Lower right
+            mIndices.push_back(Vi + 1);     //Upper left
 
-            mIndices.push_back(Vi + depth +1);
+            mIndices.push_back(Vi + depth +1);  //Upper right
             mIndices.push_back(Vi + 1);
             mIndices.push_back(Vi + depth);
         }
     }
+
+    triangulate();
     normalize();
 
     mMatrix.setToIdentity();
@@ -132,6 +131,47 @@ void TriangleSurface::origoFixer()
     }
 }
 
+void TriangleSurface::triangulate()
+{
+    int size = ((width-1)*(depth-1)*2);
+    int yloop = 32; //used to check if we've looped the grid on the y axis
+    int n0, n1, n2; //neighbours
+    for(int i = 0; i < size; i+=2) // +1 per triangle, 2 triangles at a time
+    {
+        //Bottom left triangle, even numbered triangles
+        n0 = i + 1;     //the neighbour above
+        n1 = i - 32;    //the neighbour to the left
+        if(n1 < 0)      //check to see if n1 is outside the grid
+            n1 = -1;
+
+        if(yloop == 32) //using yloop to see if we're at the bottom of the grid
+        {
+            n2 = -1;
+            yloop = 0;  //reset yloop
+        }
+        else            //the neighbour below if we're not at the bottom of the grid
+            n2 = i - 1;
+        qDebug() << i << mIndices[i] << n0 << n1 << n2;
+        Vertex::Triangle t0(mIndices.at(i), mIndices.at(i + 1), mIndices.at(i + 2), n0, n1, n2);
+        mTriangles.push_back(t0);
+
+//        //Top right triangle, odd numbered triangles
+//        n0 = i + 32;    //the neighbour to the right
+//        if(n0 > size)
+//            i = -1;
+
+//        n1 = i + 1;     //the neighbour above
+//        if(yloop == 31) //using yloop to see if we're at the top of the grid
+//            n1 = -1;
+
+//        n2 = i - 1;     //the neighbour below
+//        yloop += 2;     //moving two times up the grid
+//        Vertex::Triangle t1(mIndices.at(i+1), mIndices.at(i + 2), mIndices.at(i + 3), n0, n1, n2);
+//        mTriangles.push_back(t1);
+//        //qDebug() << i + 1 << mIndices[i+1] << n0 << n1 << n2;
+    }
+}
+
 void TriangleSurface::normalize()
 {
     for(int i = 0; i < width-1; i++)
@@ -181,7 +221,6 @@ void TriangleSurface::normalize()
             n += QVector3D::normal(V0, V6, V1); //T5
             n/=vcount;
             n.normalize();
-            //qDebug() << n;
             mVertices[Vi].setNormal(n);
         }
     }
