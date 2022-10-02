@@ -16,6 +16,7 @@ public:
     void construct();
     void triangulate();
     void normalize();
+    Vertex::Triangle findTriangle(float x, float y);
     float heightCalc(float x, float y);
     void shaderToggle(GLuint ShaderId);
     void init(GLint matrixUniform) override;

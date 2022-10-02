@@ -1,9 +1,9 @@
 #ifndef RAINDROP_H
 #define RAINDROP_H
 
-#include "octaball.h"
+#include "rollingball.h"
 
-class RainDrop : public OctaBall
+class RainDrop : public RollingBall
 {
 public:
     RainDrop(int n, float x, float y);

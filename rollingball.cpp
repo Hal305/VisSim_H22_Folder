@@ -46,6 +46,11 @@ void RollingBall::move(float dt)
     }
 }
 
+//Vertex::Triangle RollingBall::findTriangle(float x, float y)
+//{
+//dynamic_cast<TriangleSurface*>(triangle_surface)->heightCalc(x,y);
+//}
+
 void RollingBall::init(GLint matrixUniform)
 {
     mMatrixUniform = matrixUniform;

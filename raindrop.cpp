@@ -1,6 +1,6 @@
 #include "raindrop.h"
 
-RainDrop::RainDrop(int n, float x, float y) : OctaBall (n)
+RainDrop::RainDrop(int n, float x, float y) : RollingBall (n)
 {
     spawn(x,y);
 }

@@ -20,6 +20,7 @@ TriangleSurface::TriangleSurface(std::string filename, GLuint ShaderId, GLuint T
     construct();
     triangulate();
     normalize();
+    findTriangle(0.5, 0.5);
 
     mMatrix.setToIdentity();
 }
@@ -232,6 +233,26 @@ void TriangleSurface::normalize()
             mVertices[Vi].setNormal(n);
         }
     }
+}
+
+Vertex::Triangle TriangleSurface::findTriangle(float x, float y)
+{
+    //La P = (x, y)
+    //YStart søket i trekant i=0.
+    int i = 0;
+    bool found = false;
+    QVector2D P = {mVertices[mTriangles[i].indexes[0]].getX(), mVertices[mTriangles[i].indexes[0]].getY()},
+            Q = {mVertices[mTriangles[i].indexes[1]].getX(), mVertices[mTriangles[i].indexes[1]].getY()},
+            R = {mVertices[mTriangles[i].indexes[2]].getX(), mVertices[mTriangles[i].indexes[2]].getY()};
+    qDebug() << P << Q << R;
+//    do {
+//    //Beregn barysentriske koordinater for trekant i
+//        BarycentricCalc BC(QVector2D{x,y});
+//        BC.calculate(P, Q, R);
+//    //if u; v; w ≥ 0 funnet = true;
+//    //else i = nabo som svarer til minste barysentriske koordinaten
+//    } while (!found);
+    return mTriangles[i];
 }
 
 float TriangleSurface::heightCalc(float x, float y)
