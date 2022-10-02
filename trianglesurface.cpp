@@ -140,14 +140,15 @@ void TriangleSurface::triangulate()
     {
         //Bottom left triangle, even numbered triangles
         n0 = i + 1;     //the neighbour above
-        n1 = i - 32;    //the neighbour to the left
+        n1 = i - 31;    //the neighbour to the left
         if(n1 < 0)      //check to see if n1 is outside the grid
             n1 = -1;
 
-        if(yloop == 32) //using yloop to see if we're at the bottom of the grid
+        if(yloop >= 32) //using yloop to see if we're at the bottom of the grid
         {
             n2 = -1;
             yloop = 0;  //reset yloop
+            //qDebug() << "Y loop reset";
         }
         else            //the neighbour below if we're not at the bottom of the grid
             n2 = i - 1;
@@ -165,10 +166,10 @@ void TriangleSurface::triangulate()
 //            n1 = -1;
 
 //        n2 = i - 1;     //the neighbour below
-//        yloop += 2;     //moving two times up the grid
 //        Vertex::Triangle t1(mIndices.at(i+1), mIndices.at(i + 2), mIndices.at(i + 3), n0, n1, n2);
 //        mTriangles.push_back(t1);
 //        //qDebug() << i + 1 << mIndices[i+1] << n0 << n1 << n2;
+        yloop += 2;     //moving two times up the grid
     }
 }
 
