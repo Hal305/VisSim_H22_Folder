@@ -133,10 +133,10 @@ void TriangleSurface::origoFixer()
 
 void TriangleSurface::triangulate()
 {
-    int size = ((width-1)*(depth-1)*2);
+    int size = (width-1)*(depth-1)*2;
     int yloop = 32; //used to check if we've looped the grid on the y axis
     int n0, n1, n2; //neighbours
-    for(int i = 0; i < size; i+=2) // +1 per triangle, 2 triangles at a time
+    for(int i = 0; i < size; i++) // +1 per triangle, 2 triangles at a time
     {
         //Bottom left triangle, even numbered triangles
         n0 = i + 1;     //the neighbour above
@@ -144,7 +144,7 @@ void TriangleSurface::triangulate()
         if(n1 < 0)      //check to see if n1 is outside the grid
             n1 = -1;
 
-        if(yloop >= 32) //using yloop to see if we're at the bottom of the grid
+        if(yloop == 32) //using yloop to see if we're at the bottom of the grid
         {
             n2 = -1;
             yloop = 0;  //reset yloop
@@ -152,23 +152,24 @@ void TriangleSurface::triangulate()
         }
         else            //the neighbour below if we're not at the bottom of the grid
             n2 = i - 1;
-        qDebug() << i << mIndices[i] << n0 << n1 << n2;
-        Vertex::Triangle t0(mIndices.at(i), mIndices.at(i + 1), mIndices.at(i + 2), n0, n1, n2);
-        mTriangles.push_back(t0);
+        //qDebug() << i << mIndices[i] << n0 << n1 << n2;
+        Vertex::Triangle tEven(mIndices.at(i), mIndices.at(i + 1), mIndices.at(i + 2), n0, n1, n2);
+        mTriangles.push_back(tEven);
 
-//        //Top right triangle, odd numbered triangles
-//        n0 = i + 32;    //the neighbour to the right
-//        if(n0 > size)
-//            i = -1;
+        //Top right triangle, odd numbered triangles
+        i++;
+        n0 = i + 31;    //the neighbour to the right
+        if(n0 > size)
+            n0 = -1;
 
-//        n1 = i + 1;     //the neighbour above
-//        if(yloop == 31) //using yloop to see if we're at the top of the grid
-//            n1 = -1;
+        n1 = i + 1;     //the neighbour above
+        if(yloop == 30) //using yloop to see if we're at the top of the grid
+            n1 = -1;
 
-//        n2 = i - 1;     //the neighbour below
-//        Vertex::Triangle t1(mIndices.at(i+1), mIndices.at(i + 2), mIndices.at(i + 3), n0, n1, n2);
-//        mTriangles.push_back(t1);
-//        //qDebug() << i + 1 << mIndices[i+1] << n0 << n1 << n2;
+        n2 = i - 1;     //the neighbour below
+        Vertex::Triangle tOdd(mIndices.at(i+1), mIndices.at(i + 2), mIndices.at(i + 3), n0, n1, n2);
+        mTriangles.push_back(tOdd);
+        //qDebug() << i << mIndices[i] << n0 << n1 << n2;
         yloop += 2;     //moving two times up the grid
     }
 }
