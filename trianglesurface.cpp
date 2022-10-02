@@ -156,8 +156,8 @@ void TriangleSurface::triangulate()
         Vertex::Triangle tEven(mIndices.at(i), mIndices.at(i + 1), mIndices.at(i + 2), n0, n1, n2);
         mTriangles.push_back(tEven);
 
+        i++; //Increments for odd triangle
         //Top right triangle, odd numbered triangles
-        i++;
         n0 = i + 31;    //the neighbour to the right
         if(n0 > size)
             n0 = -1;
@@ -167,7 +167,7 @@ void TriangleSurface::triangulate()
             n1 = -1;
 
         n2 = i - 1;     //the neighbour below
-        Vertex::Triangle tOdd(mIndices.at(i+1), mIndices.at(i + 2), mIndices.at(i + 3), n0, n1, n2);
+        Vertex::Triangle tOdd(mIndices.at(i), mIndices.at(i + 1), mIndices.at(i + 2), n0, n1, n2);
         mTriangles.push_back(tOdd);
         //qDebug() << i << mIndices[i] << n0 << n1 << n2;
         yloop += 2;     //moving two times up the grid
