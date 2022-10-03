@@ -2,6 +2,8 @@
 
 RainDrop::RainDrop(int n, float x, float y) : RollingBall (n)
 {
+//    for(unsigned int i = 0; i <= mVertices.size(); i++)
+//        mVertices.at(i).setNormal(QVector3D(0.7,0.7,0.7));
     spawn(x,y);
 }
 

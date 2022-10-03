@@ -20,7 +20,7 @@ TriangleSurface::TriangleSurface(std::string filename, GLuint ShaderId, GLuint T
     construct();
     triangulate();
     normalize();
-    findTriangle(0, 0);
+    //findTriangle(0, 0);
 
     mMatrix.setToIdentity();
 }

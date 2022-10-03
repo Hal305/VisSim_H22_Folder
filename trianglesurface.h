@@ -22,6 +22,7 @@ public:
     void init(GLint matrixUniform) override;
     void draw() override;
     std::vector<Vertex>& get_vertices() { return mVertices; } // 191120
+    std::vector<Vertex::Triangle>& get_triangles(){ return mTriangles; };
     QVector3D grid[12][17];
     float xmin = 800000.f, xmax = 0, ymin = 131400000.f, ymax = 0, zmin = 300, zmax = 0;
     float width = 0, depth = 0, height = 0;
