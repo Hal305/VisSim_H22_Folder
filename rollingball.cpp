@@ -24,7 +24,8 @@ void RollingBall::move(float dt)
 //        qDebug() << vertices[i].getX() << vertices[i].getY() << vertices[i].getZ();
 //    }
         //mz = dynamic_cast<TriangleSurface*>(triangle_surface)->heightCalc(mx, my);
-    Vertex::Triangle currentTriangle = findTriangle(mx, my);
+
+       currentTriangle = findTriangle(mx, my);
 
     mPosition.translate(dt, -dt * 0.66f, mz-lastz);
     mMatrix = mPosition*mScale;
