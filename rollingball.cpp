@@ -3,7 +3,7 @@
 RollingBall::RollingBall(int n) : OctaBall (n)
 {
     //mVelocity = QVector3d{1.0f, 1.0f, -0.05f};
-    currentTriangle;
+    //findTriangle(0,0);
     mPosition.translate(mx,my,mz);
     setScale(0.1);
     mMatrix = mPosition * mScale;
@@ -19,8 +19,8 @@ void RollingBall::move(float dt)
     mx+=dt, my -= dt*0.66f;
     // Finne trekant
     std::vector<Vertex>& vertices = dynamic_cast<TriangleSurface*>(triangle_surface)->get_vertices();
-
-    currentTriangle = findTriangle(mx, my);
+    Vertex::Triangle currentTriangle(0,0,0,0,0,0);
+    //currentTriangle = findTriangle(mx, my);
     float mP = u * vertices[currentTriangle.indexes[0]].getZ();
     float mQ = v * vertices[currentTriangle.indexes[1]].getZ();
     float mR = w * vertices[currentTriangle.indexes[2]].getZ();
