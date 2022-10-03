@@ -20,7 +20,7 @@ TriangleSurface::TriangleSurface(std::string filename, GLuint ShaderId, GLuint T
     construct();
     triangulate();
     normalize();
-    findTriangle(0.5, 0.5);
+    findTriangle(0, 0);
 
     mMatrix.setToIdentity();
 }
@@ -237,21 +237,39 @@ void TriangleSurface::normalize()
 
 Vertex::Triangle TriangleSurface::findTriangle(float x, float y)
 {
-    //La P = (x, y)
-    //YStart søket i trekant i=0.
-    int i = 0;
+    int mDepth = (y + depth/2)*2;
+    int mWidth = (x + width/2)*2;
+    int i = (mDepth * depth) + mWidth; // Might have to change these around
+    qDebug() << x << y << i << mDepth << mWidth;
     bool found = false;
-    QVector2D P = {mVertices[mTriangles[i].indexes[0]].getX(), mVertices[mTriangles[i].indexes[0]].getY()},
-            Q = {mVertices[mTriangles[i].indexes[1]].getX(), mVertices[mTriangles[i].indexes[1]].getY()},
-            R = {mVertices[mTriangles[i].indexes[2]].getX(), mVertices[mTriangles[i].indexes[2]].getY()};
+    do {
+        QVector2D P = {mVertices[mTriangles[i].indexes[0]].getX(), mVertices[mTriangles[i].indexes[0]].getY()},
+                Q = {mVertices[mTriangles[i].indexes[1]].getX(), mVertices[mTriangles[i].indexes[1]].getY()},
+                R = {mVertices[mTriangles[i].indexes[2]].getX(), mVertices[mTriangles[i].indexes[2]].getY()};
     qDebug() << P << Q << R;
-//    do {
-//    //Beregn barysentriske koordinater for trekant i
-//        BarycentricCalc BC(QVector2D{x,y});
-//        BC.calculate(P, Q, R);
-//    //if u; v; w ≥ 0 funnet = true;
-//    //else i = nabo som svarer til minste barysentriske koordinaten
-//    } while (!found);
+    //Beregn barysentriske koordinater for trekant i
+        BarycentricCalc BC(QVector2D{x,y});
+        QVector3D result = BC.calculate(P, Q, R);
+        float u = result.x(), v = result.y(), w = result.z();
+        qDebug() << i << u << v << w;
+    if (u >= 0 && v >= 0 && w >= 0
+            && u <= 1 && v <= 1 && w <= 1)
+        found = true;
+    //else i = nabo som svarer til minste barysentriske koordinaten
+    else
+        if(u<=v && u<=w && mTriangles[i].neighbours[0] != -1)
+            i = mTriangles[i].neighbours[0];
+        else if(v<=u && v<=w && mTriangles[i].neighbours[1] != -1)
+            i = mTriangles[i].neighbours[1];
+        else if(w<=u && w<=v && mTriangles[i].neighbours[2] != -1)
+            i = mTriangles[i].neighbours[2];
+        else
+        {
+            qDebug() << "Out of bounds";
+            found = true;
+        }
+    } while (!found);
+    qDebug() << "Triangle found!" << mTriangles[i].indexes[0] << mTriangles[i].indexes[1] << mTriangles[i].indexes[2];
     return mTriangles[i];
 }
 

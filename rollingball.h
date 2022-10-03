@@ -20,7 +20,7 @@ private:
     Vertex::Triangle findTriangle(float x, float y);
     QVector3D old_normal{0.0, 0.0, 1.0};
     int old_index{0};
-    float mx = 0, my = 2, mz = 0.15f;
+    float mx = 0, my = 0, mz = 0.15f;
     float dx = 0, dy = 0, dz = 0;
     float lastz = 0;
     float mP = 0, mQ = 0, mR = 0;
