@@ -17,7 +17,6 @@ public:
 protected:
     VisualObject* triangle_surface;
 private:
-    Vertex::Triangle findTriangle(float x, float y);
     QVector3D old_normal{0.0, 0.0, 1.0};
     int old_index{0};
     float mx = 0, my = 0, mz = 0.15f;
