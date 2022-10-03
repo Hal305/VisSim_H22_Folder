@@ -17,18 +17,15 @@ RollingBall::~RollingBall()
 void RollingBall::move(float dt)
 {
     Vertex::Triangle currentTriangle(0,0,0,0,0,0);
-    mx+=dt, my -= dt*0.66f;
+    float dx = dt, dy = -dt * 0.66f, dz = g*dt;
+    mx+=dx, my -= dy*0.66f;
     currentTriangle = dynamic_cast<TriangleSurface*>(triangle_surface)->findTriangle(mx,my);
-    std::vector<Vertex>& vertices = dynamic_cast<TriangleSurface*>(triangle_surface)->get_vertices();
-    float mP = u * vertices[currentTriangle.indexes[0]].getZ();
-    float mQ = v * vertices[currentTriangle.indexes[1]].getZ();
-    float mR = w * vertices[currentTriangle.indexes[2]].getZ();
-    //mz = 0.1 + (mP + mQ + mR);
+    mz = dynamic_cast<TriangleSurface*>(triangle_surface)->zReturn;
 
-//    mPosition.translate(dt, -dt * 0.66f, mz-lastz);
-//    mMatrix = mPosition*mScale;
-    //qDebug() << mz;
-    //lastz = mz;
+    mPosition.translate(dx, dy, mz-lastz);
+    mMatrix = mPosition*mScale;
+    qDebug() << mz;
+    lastz = mz;
     {
         // beregne normal
         // beregn akselerasjonsvektor−ligning(7)

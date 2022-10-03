@@ -26,6 +26,7 @@ public:
     QVector3D grid[12][17];
     float xmin = 800000.f, xmax = 0, ymin = 131400000.f, ymax = 0, zmin = 300, zmax = 0;
     float width = 0, depth = 0, height = 0;
+    float zReturn;
 };
 
 #endif // TRIANGLESURFACE_H

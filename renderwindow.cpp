@@ -313,7 +313,7 @@ void RenderWindow::render()
     }
 
     movePlayer();
-    ball->move(0.1f);
+    ball->move(0.017f);
 
     //Calculate framerate before
     // checkForGLerrors() because that call takes a long time

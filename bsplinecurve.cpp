@@ -10,32 +10,32 @@ BSplineCurve::BSplineCurve(int degree, std::vector<int> vec, std::vector<QVector
 
 int BSplineCurve::findKnotInterval(float x)
 {
-int my = n-1; //Index for last control point
-while (x < t[my] && my > d)
-    my--;
-return my;
+    int my = n-1; //Index for last control point
+    while (x < t[my] && my > d)
+        my--;
+    return my;
 }
 
 QVector3D BSplineCurve::evaluateBSplineSample(float x)
 {
-int my = findKnotInterval(x);
+    int my = findKnotInterval(x);
 
-std::vector<QVector3D> a;
-a.reserve(d+1);
+    std::vector<QVector3D> a;
+    a.reserve(d+1);
 
-for(int j = 0; j<=d; j++)
-{
-    a.push_back(c[my-j].toVector3D());
-}
-for(int k = 0; k>0; k--)
-{
-    int j = my - k;
-    for(int i = 0; i < k; i++)
+    for(int j = 0; j<=d; j++)
     {
-        j++;
-        float w = (x-t[j]-t[j]);
-        a[i] = a[i]*(1 - w) + a[i + 1] * w;
+        a.push_back(c[my-j].toVector3D());
     }
-}
-return a[0];
+    for(int k = 0; k>0; k--)
+    {
+        int j = my - k;
+        for(int i = 0; i < k; i++)
+        {
+            j++;
+            float w = (x-t[j]-t[j]);
+            a[i] = a[i]*(1 - w) + a[i + 1] * w;
+        }
+    }
+    return a[0];
 }

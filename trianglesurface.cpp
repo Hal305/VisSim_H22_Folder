@@ -240,7 +240,8 @@ Vertex::Triangle TriangleSurface::findTriangle(float x, float y)
     int mDepth = (y + depth/2)*2;
     int mWidth = (x + width/2)*2;
     int i = (mWidth * depth) + mDepth; // Might have to change these around
-    qDebug() << x << y << i << mDepth << mWidth;
+    qDebug() << x << y << i;
+    float u =0, v = 0, w = 0;
     bool found = false;
     if(i>=0 && i < mTriangles.size())
     {
@@ -248,12 +249,12 @@ Vertex::Triangle TriangleSurface::findTriangle(float x, float y)
             QVector2D P = {mVertices[mTriangles[i].indexes[0]].getX(), mVertices[mTriangles[i].indexes[0]].getY()},
                     Q = {mVertices[mTriangles[i].indexes[1]].getX(), mVertices[mTriangles[i].indexes[1]].getY()},
                     R = {mVertices[mTriangles[i].indexes[2]].getX(), mVertices[mTriangles[i].indexes[2]].getY()};
-            qDebug() << P << Q << R;
+            //qDebug() << P << Q << R;
             //Beregn barysentriske koordinater for trekant i
             BarycentricCalc BC(QVector2D{x,y});
             QVector3D result = BC.calculate(P, Q, R);
-            float u = result.x(), v = result.y(), w = result.z();
-            qDebug() << i << u << v << w;
+            u = result.x(), v = result.y(), w = result.z();
+            //qDebug() << i << u << v << w;
             if (u >= 0 && v >= 0 && w >= 0
                     && u <= 1 && v <= 1 && w <= 1)
                 found = true;
@@ -273,14 +274,20 @@ Vertex::Triangle TriangleSurface::findTriangle(float x, float y)
                 }
             }
         } while (!found);
+        float mP = u * mVertices[mTriangles[i].indexes[0]].getZ();
+        float mQ = v * mVertices[mTriangles[i].indexes[1]].getZ();
+        float mR = w * mVertices[mTriangles[i].indexes[2]].getZ();
+        zReturn = 0.1 + (mP + mQ + mR);
+        qDebug() << zReturn;
+        //qDebug() << "Triangle found!" << mTriangles[i].indexes[0] << mTriangles[i].indexes[1] << mTriangles[i].indexes[2];
         return mTriangles[i];
     }
     else
     {
-        qDebug() << "crash";
+        qDebug() << "Out of bounds";
+        zReturn = 0;
         return mTriangles[0];
     }
-    //qDebug() << "Triangle found!" << mTriangles[i].indexes[0] << mTriangles[i].indexes[1] << mTriangles[i].indexes[2];
 }
 
 float TriangleSurface::heightCalc(float x, float y)
