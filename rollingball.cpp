@@ -3,6 +3,7 @@
 RollingBall::RollingBall(int n) : OctaBall (n)
 {
     //mVelocity = QVector3d{1.0f, 1.0f, -0.05f};
+    currentTriangle;
     mPosition.translate(mx,my,mz);
     setScale(0.1);
     mMatrix = mPosition * mScale;
@@ -15,17 +16,15 @@ RollingBall::~RollingBall()
 
 void RollingBall::move(float dt)
 {
+    mx+=dt, my -= dt*0.66f;
     // Finne trekant
     std::vector<Vertex>& vertices = dynamic_cast<TriangleSurface*>(triangle_surface)->get_vertices();
-    mx+=dt, my -= dt*0.66f;
-    if(mx == 0)
-//    for(int i = 0; i<vertices.size(); i++)
-//    {
-//        qDebug() << vertices[i].getX() << vertices[i].getY() << vertices[i].getZ();
-//    }
-        //mz = dynamic_cast<TriangleSurface*>(triangle_surface)->heightCalc(mx, my);
 
-       currentTriangle = findTriangle(mx, my);
+    currentTriangle = findTriangle(mx, my);
+    float mP = u * vertices[currentTriangle.indexes[0]].getZ();
+    float mQ = v * vertices[currentTriangle.indexes[1]].getZ();
+    float mR = w * vertices[currentTriangle.indexes[2]].getZ();
+    mz = 0.1 + (mP + mQ + mR);
 
     mPosition.translate(dt, -dt * 0.66f, mz-lastz);
     mMatrix = mPosition*mScale;
@@ -58,6 +57,7 @@ Vertex::Triangle RollingBall::findTriangle(float x, float y)
     int mDepth = (y + depth/2)*2;
     int mWidth = (x + width/2)*2;
     int i = (mDepth * depth) + mWidth; // Might have to change these around
+
     qDebug() << x << y << i << mDepth << mWidth;
     bool found = false;
     do {
@@ -68,7 +68,7 @@ Vertex::Triangle RollingBall::findTriangle(float x, float y)
     //Beregn barysentriske koordinater for trekant i
         BarycentricCalc BC(QVector2D{x,y});
         QVector3D result = BC.calculate(P, Q, R);
-        float u = result.x(), v = result.y(), w = result.z();
+        u = result.x(), v = result.y(), w = result.z();
         qDebug() << i << u << v << w;
     if (u >= 0 && v >= 0 && w >= 0
             && u <= 1 && v <= 1 && w <= 1)

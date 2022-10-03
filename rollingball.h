@@ -17,6 +17,7 @@ public:
 protected:
     VisualObject* triangle_surface;
 private:
+    Vertex::Triangle currentTriangle;
     Vertex::Triangle findTriangle(float x, float y);
     QVector3D old_normal{0.0, 0.0, 1.0};
     int old_index{0};
@@ -26,6 +27,6 @@ private:
     float mP = 0, mQ = 0, mR = 0;
     QVector2D P{0,0}, Q{0,0}, R{0,0};
     QVector3D normal = {0,0,0};
-    Vertex::Triangle currentTriangle;
+    float u, v, w;
 };
 #endif // ROLLINGBALL_H
