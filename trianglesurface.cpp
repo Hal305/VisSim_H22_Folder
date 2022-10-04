@@ -173,11 +173,15 @@ void TriangleSurface::triangulate()
             n1 = t + 1;     //the neighbour above
 
         n2 = t - 1;     //the neighbour below
-        Vertex::Triangle tOdd(mIndices.at(i), mIndices.at(i + 1), mIndices.at(i + 2), n0, n1, n2);
+        Vertex::Triangle tOdd(mIndices.at(i + 3), mIndices.at(i + 4), mIndices.at(i + 5), n0, n1, n2);
         mTriangles.push_back(tOdd);
         //qDebug() << "t" << t << ": "<< mIndices[i+3] << mIndices[i + 4] << mIndices[i + 5] << n0 << n1 << n2;
         yloop += 2;     //moving two times up the grid
         t++;
+//        qDebug() << tEven.indexes[0] << tEven.indexes[1] << tEven.indexes[2]
+//                << tEven.neighbours[0] << tEven.neighbours[1] << tEven.neighbours[2]
+//                << "\n" << tOdd.indexes[0] << tOdd.indexes[1] << tOdd.indexes[2]
+//                   << tOdd.neighbours[0] << tOdd.neighbours[1] << tOdd.neighbours[2];
     }
 }
 
