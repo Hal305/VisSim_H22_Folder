@@ -24,10 +24,12 @@ void RollingBall::move(float dt)
 
     mPosition.translate(dx, dy, mz-lastz);
     mMatrix = mPosition*mScale;
-    qDebug() << mz;
+    //qDebug() << mz;
     lastz = mz;
     {
         // beregne normal
+        QVector3D normal = dynamic_cast<TriangleSurface*>(triangle_surface)->normalize(currentTriangle);
+        qDebug() << normal;
         // beregn akselerasjonsvektor−ligning(7)
         // Oppdaterer hastighet og posisjon
         //if ( /* ny indeks != forrige indeks */)

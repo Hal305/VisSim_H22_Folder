@@ -235,20 +235,31 @@ void TriangleSurface::normalize()
     }
 }
 
+QVector3D TriangleSurface::normalize(Vertex::Triangle t)
+{
+    QVector3D n0 = {mVertices[t.indexes[0]].getX(),
+                    mVertices[t.indexes[0]].getY(),
+                    mVertices[t.indexes[0]].getZ()};
+    QVector3D n1 = {mVertices[t.indexes[1]].getX(),
+                    mVertices[t.indexes[1]].getY(),
+                    mVertices[t.indexes[1]].getZ()};
+    QVector3D n2 = {mVertices[t.indexes[2]].getX(),
+                    mVertices[t.indexes[2]].getY(),
+                    mVertices[t.indexes[2]].getZ()};
+return QVector3D::normal(n0,n1,n2);
+}
+
 Vertex::Triangle TriangleSurface::findTriangle(float x, float y)
 {
-    int mDepth = (y + depth/2)*2;
-    int mWidth = (x + width/2)*2;
-    int i = (mWidth * depth) + mDepth; // Might have to change these around
-    qDebug() << x << y << i;
+    qDebug() << x << y << Ti;
     float u =0, v = 0, w = 0;
     bool found = false;
-    if(i>=0 && i < mTriangles.size())
+    if(Ti>=0 && Ti < mTriangles.size())
     {
         do {
-            QVector2D P = {mVertices[mTriangles[i].indexes[0]].getX(), mVertices[mTriangles[i].indexes[0]].getY()},
-                    Q = {mVertices[mTriangles[i].indexes[1]].getX(), mVertices[mTriangles[i].indexes[1]].getY()},
-                    R = {mVertices[mTriangles[i].indexes[2]].getX(), mVertices[mTriangles[i].indexes[2]].getY()};
+            QVector2D P = {mVertices[mTriangles[Ti].indexes[0]].getX(), mVertices[mTriangles[Ti].indexes[0]].getY()},
+                    Q = {mVertices[mTriangles[Ti].indexes[1]].getX(), mVertices[mTriangles[Ti].indexes[1]].getY()},
+                    R = {mVertices[mTriangles[Ti].indexes[2]].getX(), mVertices[mTriangles[Ti].indexes[2]].getY()};
             //qDebug() << P << Q << R;
             //Beregn barysentriske koordinater for trekant i
             BarycentricCalc BC(QVector2D{x,y});
@@ -261,12 +272,12 @@ Vertex::Triangle TriangleSurface::findTriangle(float x, float y)
             //else i = nabo som svarer til minste barysentriske koordinaten
             else
             {
-                if(u<=v && u<=w && mTriangles[i].neighbours[0] != -1)
-                    i = mTriangles[i].neighbours[0];
-                if(v<=u && v<=w && mTriangles[i].neighbours[1] != -1)
-                    i = mTriangles[i].neighbours[1];
-                if(w<=u && w<=v && mTriangles[i].neighbours[2] != -1)
-                    i = mTriangles[i].neighbours[2];
+                if(u<=v && u<=w && mTriangles[Ti].neighbours[0] != -1)
+                    Ti = mTriangles[Ti].neighbours[0];
+                if(v<=u && v<=w && mTriangles[Ti].neighbours[1] != -1)
+                    Ti = mTriangles[Ti].neighbours[1];
+                if(w<=u && w<=v && mTriangles[Ti].neighbours[2] != -1)
+                    Ti = mTriangles[Ti].neighbours[2];
                 else
                 {
                     qDebug() << "Out of bounds";
@@ -274,13 +285,13 @@ Vertex::Triangle TriangleSurface::findTriangle(float x, float y)
                 }
             }
         } while (!found);
-        float mP = u * mVertices[mTriangles[i].indexes[0]].getZ();
-        float mQ = v * mVertices[mTriangles[i].indexes[1]].getZ();
-        float mR = w * mVertices[mTriangles[i].indexes[2]].getZ();
+        float mP = u * mVertices[mTriangles[Ti].indexes[0]].getZ();
+        float mQ = v * mVertices[mTriangles[Ti].indexes[1]].getZ();
+        float mR = w * mVertices[mTriangles[Ti].indexes[2]].getZ();
         zReturn = 0.1 + (mP + mQ + mR);
         qDebug() << zReturn;
         //qDebug() << "Triangle found!" << mTriangles[i].indexes[0] << mTriangles[i].indexes[1] << mTriangles[i].indexes[2];
-        return mTriangles[i];
+        return mTriangles[Ti];
     }
     else
     {
