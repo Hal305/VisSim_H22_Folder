@@ -24,6 +24,6 @@ private:
     float lastz = 0;
     float mP = 0, mQ = 0, mR = 0;
     QVector2D P{0,0}, Q{0,0}, R{0,0};
-    QVector3D normal = {0,0,0};
+    QVector3D bVector = {0,0,0};
 };
 #endif // ROLLINGBALL_H

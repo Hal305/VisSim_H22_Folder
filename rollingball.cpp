@@ -17,30 +17,33 @@ RollingBall::~RollingBall()
 void RollingBall::move(float dt)
 {
     Vertex::Triangle currentTriangle(0,0,0,0,0,0);
-    float dx = dt, dy = dt * 0.66f, dz = g*dt;
-    mx+=dx, my += dy*0.66f;
+    //float dx = dt, dy = dt * 0.66f, dz = g*dt;
+    //mx+=dx, my += dy*0.66f;
     currentTriangle = dynamic_cast<TriangleSurface*>(triangle_surface)->findTriangle(mx,my);
     mz = dynamic_cast<TriangleSurface*>(triangle_surface)->zReturn;
+    // beregne normal
+
+    QVector3D tNormal = dynamic_cast<TriangleSurface*>(triangle_surface)->normalize(currentTriangle);
+    qDebug() << "Current normal ="<< tNormal;
+    bVector = tNormal;
+    bVector.setZ(bVector.z()+g);
+    bVector *= dt;
+    mx += bVector.x(), my += bVector.y();
+    // beregn akselerasjonsvektor−ligning(7)
+    // Oppdaterer hastighet og posisjon
+    //if ( /* ny indeks != forrige indeks */)
+    {
+        // Ball en har rullet over på nytt triangel
+        // Beregner normalen til kollisjonsplanet,
+        // se ligning (9)
+        // Korrigereposisjon oppover i normalens retning
+        // Oppdater hastighetsvektoren, se ligning (8)
+        // Oppdatere posisjon i retning den nye
+        // hastighetsvektoren
+    }
+    // Oppdater gammel normal og indeks
     mPosition.setColumn(3, QVector4D(mx, my, mz, 1));
     mMatrix = mPosition*mScale;
-    {
-        // beregne normal
-        QVector3D normal = dynamic_cast<TriangleSurface*>(triangle_surface)->normalize(currentTriangle);
-        //qDebug() << normal;
-        // beregn akselerasjonsvektor−ligning(7)
-        // Oppdaterer hastighet og posisjon
-        //if ( /* ny indeks != forrige indeks */)
-        {
-            // Ball en har rullet over på nytt triangel
-            // Beregner normalen til lkollisjonsplanet,
-            // se ligning (9)
-            // Korrigereposisjon oppover i normalens retning
-            // Oppdater hastighetsvektoren, se ligning (8)
-            // Oppdatere posisjon i retning den nye
-            // hastighetsvektoren
-        }
-        // Oppdater gammel normal og indeks
-    }
 }
 
 void RollingBall::init(GLint matrixUniform)
