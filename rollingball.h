@@ -17,13 +17,12 @@ public:
 protected:
     VisualObject* triangle_surface;
 private:
-    QVector3D old_normal{0.0, 0.0, 1.0};
-    int old_index{0};
     float mx = 0, my = 0, mz = 0;
     float dx = 0, dy = 0, dz = 0;
-    float lastz = 0;
     float mP = 0, mQ = 0, mR = 0;
     QVector2D P{0,0}, Q{0,0}, R{0,0};
     QVector3D bVector = {0,0,0};
+    QVector3D oldNormal {0,0,1};
+    int oldIndex{0};
 };
 #endif // ROLLINGBALL_H

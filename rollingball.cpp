@@ -21,22 +21,28 @@ void RollingBall::move(float dt)
     //mx+=dx, my += dy*0.66f;
     currentTriangle = dynamic_cast<TriangleSurface*>(triangle_surface)->findTriangle(mx,my);
     mz = dynamic_cast<TriangleSurface*>(triangle_surface)->zReturn;
+    int index = dynamic_cast<TriangleSurface*>(triangle_surface)->Ti;
     // beregne normal
 
     QVector3D tNormal = dynamic_cast<TriangleSurface*>(triangle_surface)->normalize(currentTriangle);
     qDebug() << "Current normal ="<< tNormal;
-    bVector = tNormal;
-    bVector.setZ(bVector.z()+g);
-    bVector *= dt;
-    mx += bVector.x(), my += bVector.y();
+
     // beregn akselerasjonsvektor−ligning(7)
+    bVector = {tNormal.x()*tNormal.z(), tNormal.y()*tNormal.z(), (tNormal.z()*tNormal.z())-1};
+    bVector *= -g * dt;
+    mx += bVector.x(), my += bVector.y(), mz += bVector.z();
+    //bVector.setZ(bVector.z()+g);
     // Oppdaterer hastighet og posisjon
     //if ( /* ny indeks != forrige indeks */)
+    if(oldIndex!=index)
     {
         // Ball en har rullet over på nytt triangel
         // Beregner normalen til kollisjonsplanet,
+        //bVector = oldNormal - 2 * (oldNormal * tNormal) * tNormal;
+        tNormal = (oldNormal + tNormal)/(oldNormal + tNormal).length();
+
         // se ligning (9)
-        // Korrigereposisjon oppover i normalens retning
+        // Korrigere posisjon oppover i normalens retning
         // Oppdater hastighetsvektoren, se ligning (8)
         // Oppdatere posisjon i retning den nye
         // hastighetsvektoren
@@ -44,6 +50,8 @@ void RollingBall::move(float dt)
     // Oppdater gammel normal og indeks
     mPosition.setColumn(3, QVector4D(mx, my, mz, 1));
     mMatrix = mPosition*mScale;
+    oldNormal = tNormal;
+    oldIndex = index;
 }
 
 void RollingBall::init(GLint matrixUniform)

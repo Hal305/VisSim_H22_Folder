@@ -257,7 +257,7 @@ return QVector3D::normal(n0,n1,n2);
 Vertex::Triangle TriangleSurface::findTriangle(float x, float y)
 {
     bool found = false;
-    int Ti = 0;
+    Ti = 0;
     float u = 0, v = 0, w = 0;
     if(Ti>=0 && Ti < mTriangles.size())
     {
