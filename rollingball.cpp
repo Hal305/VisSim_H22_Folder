@@ -17,19 +17,16 @@ RollingBall::~RollingBall()
 void RollingBall::move(float dt)
 {
     Vertex::Triangle currentTriangle(0,0,0,0,0,0);
-    float dx = dt, dy = -dt * 0.66f, dz = g*dt;
-    mx+=dx, my -= dy*0.66f;
+    float dx = dt, dy = dt * 0.66f, dz = g*dt;
+    mx+=dx, my += dy*0.66f;
     currentTriangle = dynamic_cast<TriangleSurface*>(triangle_surface)->findTriangle(mx,my);
     mz = dynamic_cast<TriangleSurface*>(triangle_surface)->zReturn;
-
-    mPosition.translate(dx, dy, mz-lastz);
+    mPosition.setColumn(3, QVector4D(mx, my, mz, 1));
     mMatrix = mPosition*mScale;
-    //qDebug() << mz;
-    lastz = mz;
     {
         // beregne normal
         QVector3D normal = dynamic_cast<TriangleSurface*>(triangle_surface)->normalize(currentTriangle);
-        qDebug() << normal;
+        //qDebug() << normal;
         // beregn akselerasjonsvektor−ligning(7)
         // Oppdaterer hastighet og posisjon
         //if ( /* ny indeks != forrige indeks */)

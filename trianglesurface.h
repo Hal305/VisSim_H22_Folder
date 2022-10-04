@@ -18,7 +18,6 @@ public:
     void normalize();
     QVector3D normalize(Vertex::Triangle t);
     Vertex::Triangle findTriangle(float x, float y);
-    float heightCalc(float x, float y);
     void shaderToggle(GLuint ShaderId);
     void init(GLint matrixUniform) override;
     void draw() override;
@@ -28,8 +27,6 @@ public:
     float xmin = 800000.f, xmax = 0, ymin = 131400000.f, ymax = 0, zmin = 300, zmax = 0;
     float width = 0, depth = 0, height = 0;
     float zReturn;
-private:
-    int Ti = 0;
 };
 
 #endif // TRIANGLESURFACE_H
