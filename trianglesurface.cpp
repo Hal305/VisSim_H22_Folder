@@ -252,7 +252,7 @@ QVector3D TriangleSurface::normalize(Vertex::Triangle t)
 return QVector3D::normal(n0,n1,n2);
 }
 
-Vertex::Triangle TriangleSurface::findTriangle(float x, float y)
+Vertex::Triangle TriangleSurface::findTriangle(float x, float y, float z)
 {
     bool found = false;
     Ti = 0;
@@ -294,6 +294,7 @@ Vertex::Triangle TriangleSurface::findTriangle(float x, float y)
                 {
                     //qDebug() << "Out of bounds";
                     //zReturn = -5;
+                    OOB = true;
                     found = true;
                 }
             }
@@ -302,14 +303,27 @@ Vertex::Triangle TriangleSurface::findTriangle(float x, float y)
         float mQ = v * mVertices[mTriangles[Ti].indexes[1]].getZ();
         float mR = w * mVertices[mTriangles[Ti].indexes[2]].getZ();
         zReturn = 0.1 + (mP + mQ + mR);
+        if(z > zReturn)
+            OOB = true;
+        else
+            OOB = false;
         //qDebug() << zReturn;
-        //qDebug() << "Triangle found!" << mTriangles[i].indexes[0] << mTriangles[i].indexes[1] << mTriangles[i].indexes[2];
-        return mTriangles[Ti];
+        if(OOB)
+        {
+            qDebug() << OOB << "Out of bounds";
+            return Vertex::Triangle(-1,-1,-1,-1,-1,-1);
+        }
+        else
+        {
+            qDebug() << "Triangle found!" << mTriangles[Ti].indexes[0]
+                     << mTriangles[Ti].indexes[1] << mTriangles[Ti].indexes[2];
+            return mTriangles[Ti];
+        }
     }
     else
     {
         //qDebug() << "Out of bounds";
-        zReturn = 0;
+        //zReturn = 0;
         return Vertex::Triangle(-1,-1,-1,-1,-1,-1);
     }
 }
