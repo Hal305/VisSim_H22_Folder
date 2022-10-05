@@ -28,8 +28,8 @@ void RollingBall::move(float dt)
     //qDebug() << "Current normal ="<< tNormal;
 
     // Calculate acceleration vector, equation 8.7
-    QVector3D a = {tNormal.x()*tNormal.z(), tNormal.y()*tNormal.z(), (tNormal.z()*tNormal.z())-1};
-    bVector = a * dt;
+    QVector3D bVector = {tNormal.x()*tNormal.z(), tNormal.y()*tNormal.z(), (tNormal.z()*tNormal.z())-1};
+    //bVector = a * dt;
     bVector *= -g * dt;
     //mx += bVector.x(), my += bVector.y(), mz += bVector.z();
     //bVector.setZ(bVector.z()+g);
@@ -56,7 +56,8 @@ void RollingBall::move(float dt)
         bVector = bPrevious - 2 * (bPrevious * tNormal) * tNormal;
     }
     // Update position in the direction of the new velocity vector
-    mx += bVector.x(), my += bVector.y(), mz += bVector.z();
+    bSpeed += bVector*dt;
+    mx += bSpeed.x(), my += bSpeed.y(), mz += bSpeed.z();
     // Update old normal and index
     mPosition.setColumn(3, QVector4D(mx, my, mz, 1));
     mMatrix = mPosition*mScale;

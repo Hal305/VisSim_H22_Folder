@@ -28,6 +28,7 @@ private:
     QVector3D bVector = {0,0,0};
     QVector3D bPrevious = {0,0,g};
     QVector3D oldNormal {0,0,1};
+    QVector3D bSpeed {0,0,0};
     int oldIndex{0};
 };
 #endif // ROLLINGBALL_H
