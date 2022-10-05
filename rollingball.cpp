@@ -28,7 +28,7 @@ void RollingBall::move(float dt)
     //qDebug() << "Current normal ="<< tNormal;
 
     // Calculate acceleration vector, equation 8.7
-    QVector3D bVector = {tNormal.x()*tNormal.z(), tNormal.y()*tNormal.z(), (tNormal.z()*tNormal.z())-1};
+    bVector = {tNormal.x()*tNormal.z(), tNormal.y()*tNormal.z(), (tNormal.z()*tNormal.z())-1};
     //bVector = a * dt;
     bVector *= -g * dt;
     //mx += bVector.x(), my += bVector.y(), mz += bVector.z();

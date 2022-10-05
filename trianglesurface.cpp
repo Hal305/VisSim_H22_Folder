@@ -293,7 +293,7 @@ Vertex::Triangle TriangleSurface::findTriangle(float x, float y)
                 else
                 {
                     //qDebug() << "Out of bounds";
-                    zReturn = -5;
+                    //zReturn = -5;
                     found = true;
                 }
             }
@@ -310,7 +310,7 @@ Vertex::Triangle TriangleSurface::findTriangle(float x, float y)
     {
         //qDebug() << "Out of bounds";
         zReturn = 0;
-        return mTriangles[0];
+        return Vertex::Triangle(-1,-1,-1,-1,-1,-1);
     }
 }
 

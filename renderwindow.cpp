@@ -285,12 +285,12 @@ void RenderWindow::render()
     if(bRaining)
     {
         rainTimer += 0.5f;
-        if(rainTimer >= 3 && rainDropCount < 20)
+        if(rainTimer >= 3 && rainDropCount < 30)
         {
-            x = rand() % 60/10.f, y = rand() % 20/10.f;
-            //qDebug() << x << y;
+            x = (rand() % 220 -xmax)/10.f, y = (rand() % 340 - ymax)/10.f;
+            qDebug() << x << y;
             mRaindrops.push_back(new RainDrop(r, x, y));
-            rainDropCount ++;
+            rainDropCount++;
             mRaindrops.back()->init(mMMatrixUniform[0]);
             rainTimer = 0;
         }
@@ -465,14 +465,14 @@ void RenderWindow::rainFall()
             it->drawLines();
         else
             it->draw();
-        if (it->getZ() <= 0)
+        if (it->getZ() <= -5)
         {
             mRaindrops.erase(mRaindrops.begin());
             rainDropCount--;
         }
     }
     for (auto it : mRaindrops)
-        it->move(0.005f);
+        it->move(dt);
 }
 
 void RenderWindow::movePlayer()

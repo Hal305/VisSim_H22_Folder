@@ -48,8 +48,8 @@ public:
     bool bWireFrame {false};
     bool bRaining {false};
     float x = 0, y = 0;
-    const float xmin = 0, xmax = 60;
-    const float ymin = 0, ymax = 20;
+    float xmin = -110, xmax = 110;
+    float ymin = -170, ymax = 170;
     const int r = 2;
     int rainDropCount = 0;
     float rainTimer = 0;

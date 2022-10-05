@@ -17,7 +17,7 @@ public:
 protected:
     VisualObject* triangle_surface;
 private:
-    float mx = 0, my = 0, mz = 5;
+    float mx = 0, my = 0, mz = 10;
 };
 
 #endif // RAINDROP_H

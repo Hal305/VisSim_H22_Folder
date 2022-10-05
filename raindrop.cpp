@@ -2,8 +2,6 @@
 
 RainDrop::RainDrop(int n, float x, float y) : RollingBall (n)
 {
-//    for(unsigned int i = 0; i <= mVertices.size(); i++)
-//        mVertices.at(i).setNormal(QVector3D(0.7,0.7,0.7));
     spawn(x,y);
 }
 
@@ -14,17 +12,19 @@ RainDrop::~RainDrop()
 
 void RainDrop::spawn(float x, float y)
 {
-    setScale(0.01f);
+    setScale(0.25f);
     mx = x, my = y;
-    mPosition.translate(mx, my, mz);
-    mMatrix = mPosition*mScale;;
+    mPosition.setColumn(3,{mx, my, mz, 1});
+    mMatrix = mPosition*mScale;
+    for(unsigned int i = 0; i < mVertices.size(); i++)
+        mVertices.at(i).setNormal(QVector3D(0.9,0.9,0.9));
 }
 
 void RainDrop::move(float dt)
 {
     float G = dt * g;
     mz += G;
-    mPosition.translate(0, 0, G);
+    mPosition.setColumn(3, QVector4D(mx, my, mz, 1));
     mMatrix = mPosition*mScale;
     //qDebug() << G << mz;
 }
