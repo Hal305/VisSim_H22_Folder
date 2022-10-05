@@ -14,9 +14,9 @@ TriangleSurface::TriangleSurface(std::string filename, GLuint ShaderId, GLuint T
     mTextureId = TextureId;
     readFile(filename);
 
-    origoFixer();
-    construct();
-    triangulate();
+    origoFixer(); //moves point data to origo
+    construct(); //takes point data and fills our grid with it to construct the proper surface
+    triangulate(); //sets up triangles with indexes and neighbours
     normalize();
 
     //findTriangle(0, 0);
@@ -310,13 +310,13 @@ Vertex::Triangle TriangleSurface::findTriangle(float x, float y, float z)
         //qDebug() << zReturn;
         if(OOB)
         {
-            qDebug() << OOB << "Out of bounds";
+            //qDebug() << OOB << "Out of bounds";
             return Vertex::Triangle(-1,-1,-1,-1,-1,-1);
         }
         else
         {
-            qDebug() << "Triangle found!" << mTriangles[Ti].indexes[0]
-                     << mTriangles[Ti].indexes[1] << mTriangles[Ti].indexes[2];
+//            qDebug() << "Triangle found!" << mTriangles[Ti].indexes[0]
+//                     << mTriangles[Ti].indexes[1] << mTriangles[Ti].indexes[2];
             return mTriangles[Ti];
         }
     }

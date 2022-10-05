@@ -19,30 +19,25 @@ void RollingBall::move(float dt)
 {
     //qDebug() << "Old normal ="<< tNormal;
     QVector3D P0 = {mx, my, mz};
-    Vertex::Triangle currentTriangle(0,0,0,0,0,0);
-    currentTriangle = dynamic_cast<TriangleSurface*>(triangle_surface)->findTriangle(mx,my,mz);
-    //mz = dynamic_cast<TriangleSurface*>(triangle_surface)->zReturn;
+    Vertex::Triangle currentTriangle = dynamic_cast<TriangleSurface*>(triangle_surface)->findTriangle(mx,my,mz);
     int index = dynamic_cast<TriangleSurface*>(triangle_surface)->Ti;
 
     if(dynamic_cast<TriangleSurface*>(triangle_surface)->OOB == false)
     {
-        qDebug() << "Current normal ="<< tNormal;
+        //qDebug() << "Current normal ="<< tNormal;
         // Calculate normal
         tNormal = dynamic_cast<TriangleSurface*>(triangle_surface)->normalize(currentTriangle);
 
         // Calculate acceleration vector, equation 8.7
         bVector = {tNormal.x()*tNormal.z(), tNormal.y()*tNormal.z(), (tNormal.z()*tNormal.z())-1};
-        bVector.setZ(bVector.z()*g*dt);
-
-        //mx += bVector.x(), my += bVector.y(), mz += bVector.z();
-        //bVector.setZ(bVector.z()+g);
+        bVector.setZ(bVector.z()*mass*g*dt);
 
         // Update velocity and position
         if(oldIndex!=index)
         {
+            // The ball has rolled onto a new triangle
             QVector3D P = {mx, my, mz};
             QVector3D y = (P-P0) * tNormal;
-            // The ball has rolled onto a new triangle
             // Calculate the normal for the collision plane
             // bVector = oldNormal - 2 * (oldNormal * tNormal) * tNormal;
             QVector3D l = (y*tNormal)/y.length();
@@ -58,9 +53,11 @@ void RollingBall::move(float dt)
             // previous v = v - 2 * (v * n) * n
             bVector = bPrevious - 2 * (bPrevious * tNormal) * tNormal;
         }
+//        else //Experimentation
+//            mz = dynamic_cast<TriangleSurface*>(triangle_surface)->zReturn;
     }
     else
-        bVector.setZ((bVector.z()+0.5)*g*dt);
+        bVector.setZ(mass*g*dt);
 
     //qDebug() << bVector.z();
     // Update position in the direction of the new velocity vector

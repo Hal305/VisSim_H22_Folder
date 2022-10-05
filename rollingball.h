@@ -17,8 +17,8 @@ public:
 protected:
     VisualObject* triangle_surface;
 private:
-    float mx = 0.5, my = 3, mz = 0;
-    float mass = 1;
+    float mx = 0, my = 0, mz = 0;
+    float mass = 0.5;
     void fall();
     void roll();
     float radius = 1; // Ball is 2 vertex positions wide
