@@ -18,6 +18,8 @@ protected:
     VisualObject* triangle_surface;
 private:
     float mx = 0, my = 0, mz = 0;
+    float radius = 1; // Ball is 2 vertex positions wide
+    float scale = 0.1;
     float dx = 0, dy = 0, dz = 0;
     float mP = 0, mQ = 0, mR = 0;
     QVector2D P{0,0}, Q{0,0}, R{0,0};

@@ -5,7 +5,8 @@ RollingBall::RollingBall(int n) : OctaBall (n)
     //mVelocity = QVector3d{1.0f, 1.0f, -0.05f};
     //findTriangle(0,0);
     mPosition.translate(mx,my,mz);
-    setScale(0.1);
+    radius *= scale;
+    setScale(scale);
     mMatrix = mPosition * mScale;
 }
 
@@ -16,38 +17,44 @@ RollingBall::~RollingBall()
 
 void RollingBall::move(float dt)
 {
+    QVector3D P0 = {mx, my, mz};
     Vertex::Triangle currentTriangle(0,0,0,0,0,0);
     //float dx = dt, dy = dt * 0.66f, dz = g*dt;
     //mx+=dx, my += dy*0.66f;
     currentTriangle = dynamic_cast<TriangleSurface*>(triangle_surface)->findTriangle(mx,my);
     mz = dynamic_cast<TriangleSurface*>(triangle_surface)->zReturn;
     int index = dynamic_cast<TriangleSurface*>(triangle_surface)->Ti;
-    // beregne normal
+    // Calculate normal
 
     QVector3D tNormal = dynamic_cast<TriangleSurface*>(triangle_surface)->normalize(currentTriangle);
     qDebug() << "Current normal ="<< tNormal;
 
-    // beregn akselerasjonsvektor−ligning(7)
+    // Calculate acceleration vector, equation 7
     bVector = {tNormal.x()*tNormal.z(), tNormal.y()*tNormal.z(), (tNormal.z()*tNormal.z())-1};
     bVector *= -g * dt;
     mx += bVector.x(), my += bVector.y(), mz += bVector.z();
     //bVector.setZ(bVector.z()+g);
-    // Oppdaterer hastighet og posisjon
-    //if ( /* ny indeks != forrige indeks */)
+    // Update velocity and position
     if(oldIndex!=index)
     {
-        // Ball en har rullet over på nytt triangel
-        // Beregner normalen til kollisjonsplanet,
-        //bVector = oldNormal - 2 * (oldNormal * tNormal) * tNormal;
-        tNormal = (oldNormal + tNormal)/(oldNormal + tNormal).length();
-
-        // se ligning (9)
-        // Korrigere posisjon oppover i normalens retning
-        // Oppdater hastighetsvektoren, se ligning (8)
-        // Oppdatere posisjon i retning den nye
-        // hastighetsvektoren
+        QVector3D P = {mx, my, mz};
+        QVector3D y = (P-P0) * tNormal;
+        // The ball has rolled onto a new triangle
+        // Calculate the normal for the collision plane
+        // bVector = oldNormal - 2 * (oldNormal * tNormal) * tNormal;
+        QVector3D l = (y*tNormal)/y.length();
+        float i = l.x() + l.y() + l.z();
+        //qDebug() << i;
+        if(i < 0)
+        {
+            // Correct the position upwards in the normal's direction, equation 8.9
+            bVector *= radius - y.length(); //Adjusting for offset by D = r - y
+            mx += bVector.x(), my += bVector.y(), mz += bVector.z();
+        }
+        // Update the velocity vector, equation 8.8
+        // Update position in the direction of the new velocity vector
     }
-    // Oppdater gammel normal og indeks
+    // Update old normal and index
     mPosition.setColumn(3, QVector4D(mx, my, mz, 1));
     mMatrix = mPosition*mScale;
     oldNormal = tNormal;
