@@ -19,21 +19,21 @@ void RollingBall::move(float dt)
 {
     QVector3D P0 = {mx, my, mz};
     Vertex::Triangle currentTriangle(0,0,0,0,0,0);
-    //float dx = dt, dy = dt * 0.66f, dz = g*dt;
-    //mx+=dx, my += dy*0.66f;
     currentTriangle = dynamic_cast<TriangleSurface*>(triangle_surface)->findTriangle(mx,my);
     mz = dynamic_cast<TriangleSurface*>(triangle_surface)->zReturn;
     int index = dynamic_cast<TriangleSurface*>(triangle_surface)->Ti;
+
     // Calculate normal
-
     QVector3D tNormal = dynamic_cast<TriangleSurface*>(triangle_surface)->normalize(currentTriangle);
-    qDebug() << "Current normal ="<< tNormal;
+    //qDebug() << "Current normal ="<< tNormal;
 
-    // Calculate acceleration vector, equation 7
-    bVector = {tNormal.x()*tNormal.z(), tNormal.y()*tNormal.z(), (tNormal.z()*tNormal.z())-1};
+    // Calculate acceleration vector, equation 8.7
+    QVector3D a = {tNormal.x()*tNormal.z(), tNormal.y()*tNormal.z(), (tNormal.z()*tNormal.z())-1};
+    bVector = a * dt;
     bVector *= -g * dt;
-    mx += bVector.x(), my += bVector.y(), mz += bVector.z();
+    //mx += bVector.x(), my += bVector.y(), mz += bVector.z();
     //bVector.setZ(bVector.z()+g);
+
     // Update velocity and position
     if(oldIndex!=index)
     {
@@ -52,13 +52,27 @@ void RollingBall::move(float dt)
             mx += bVector.x(), my += bVector.y(), mz += bVector.z();
         }
         // Update the velocity vector, equation 8.8
-        // Update position in the direction of the new velocity vector
+        // previous v = v - 2 * (v * n) * n
+        bVector = bPrevious - 2 * (bPrevious * tNormal) * tNormal;
     }
+    // Update position in the direction of the new velocity vector
+    mx += bVector.x(), my += bVector.y(), mz += bVector.z();
     // Update old normal and index
     mPosition.setColumn(3, QVector4D(mx, my, mz, 1));
     mMatrix = mPosition*mScale;
+    bPrevious = bVector;
     oldNormal = tNormal;
     oldIndex = index;
+}
+
+void RollingBall::fall()
+{
+
+}
+
+void RollingBall::roll()
+{
+
 }
 
 void RollingBall::init(GLint matrixUniform)
@@ -90,6 +104,5 @@ void RollingBall::draw()
 {
     glBindVertexArray(mVAO);
     glUniformMatrix4fv( mMatrixUniform, 1, GL_FALSE, mMatrix.constData());
-    glDrawArrays(GL_TRIANGLES, 0, mVertices.size());
-
+    glDrawArrays(GL_TRIANGLES, 0, GLsizei(mVertices.size()));
 }

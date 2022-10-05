@@ -1,6 +1,4 @@
 #include <QDebug>
-#include <QImage>
-#include <cstdio>
 #include <iostream>
 #include "trianglesurface.h"
 #include "vertex.h"
@@ -232,7 +230,7 @@ void TriangleSurface::normalize()
             n += QVector3D::normal(V0, V4, V3); //T2
             n += QVector3D::normal(V0, V5, V4); //T3
             n += QVector3D::normal(V0, V6, V5); //T4
-            n += QVector3D::normal(V0, V6, V1); //T5
+            n += QVector3D::normal(V0, V1, V6); //T5
             n/=vcount;
             n.normalize();
             mVertices[Vi].setNormal(n);

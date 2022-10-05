@@ -117,7 +117,7 @@ private:
     ///Starts QOpenGLDebugLogger if possible
     void startOpenGLDebugger();
 
-
+    float dt = 0.1;
     bool bShader {true};
     void rainFall();
 
