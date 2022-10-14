@@ -17,7 +17,7 @@ public:
     void triangulate();
     void normalize();
     QVector3D normalize(Vertex::Triangle t);
-    Vertex::Triangle findTriangle(float x, float y, float z);
+    Vertex::Triangle findTriangle(float x, float y);
     void shaderToggle(GLuint ShaderId);
     void init(GLint matrixUniform) override;
     void draw() override;
@@ -28,7 +28,6 @@ public:
     float width = 0, depth = 0, height = 0;
     float zReturn = 0;
     int Ti = 0;
-    bool OOB = true;
 };
 
 #endif // TRIANGLESURFACE_H

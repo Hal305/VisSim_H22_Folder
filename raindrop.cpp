@@ -24,7 +24,7 @@ void RainDrop::move(float dt)
 {
     float G = dt * g;
     mz += G;
-    mPosition.setColumn (3, QVector4D(mx, my, mz, 1));
+    mPosition.setColumn(3, QVector4D(mx, my, mz, 1));
     mMatrix = mPosition*mScale;
     //qDebug() << G << mz;
 }
