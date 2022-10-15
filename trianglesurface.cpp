@@ -94,27 +94,30 @@ void TriangleSurface::origoFixer()
 
 void TriangleSurface::construct()
 {
+    QVector3D grid[12][17];
     for (unsigned int i = 0; i < mVertices.size(); i++)
     {
         int x = mVertices[i].getX()/10;
         int y = mVertices[i].getY()/10;
-        grid[x][y].setZ(mVertices[i].getZ());
+        float z = mVertices[i].getZ()/10;
+        if(grid[x][y].z())
+            z += mVertices[i].getZ()/2;
+        else
+            z = mVertices[i].getZ();
+        grid[x][y].setX(x),grid[x][y].setY(y), grid[x][y].setZ(z);
     }
 
     mVertices.clear();
-    depth = 17, width = 12;
+    depth /= 10, width /= 10;
     for (int i = 0; i < width; i++)
     {
         for (int j = 0; j < depth; j++)
         {
-            grid[i][j].setX(i);
-            grid[i][j].setY(j);
             float x = (grid[i][j].x() -width/2)*2+1;
             float y = (grid[i][j].y() -depth/2)*2+1;
-            float z = (grid[i][j].z()/4 -10);
+            float z = (grid[i][j].z()/2 -10);
             Vertex v = {x,y,z, 0,0,0, 0,0};
             mVertices.push_back(v);
-            //qDebug() << grid[i][j];
         }
     }
 
