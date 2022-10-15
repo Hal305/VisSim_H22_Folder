@@ -90,19 +90,21 @@ void TriangleSurface::origoFixer()
                                mVertices.at(i).getY()-ymin,
                                mVertices.at(i).getZ()-zmin);
     }
+    qDebug() << width << depth << height;
 }
 
 void TriangleSurface::construct()
 {
     for (unsigned int i = 0; i < mVertices.size(); i++)
     {
-        int x = mVertices[i].getX()/10;
-        int y = mVertices[i].getY()/10;
+        int x = mVertices[i].getX()/5;
+        int y = mVertices[i].getY()/5;
         grid[x][y].setZ(mVertices[i].getZ());
+        qDebug() << x << y << mVertices[i].getZ();
     }
 
     mVertices.clear();
-    depth = 17, width = 12;
+    depth = 4, width = 6; //manually set
     for (int i = 0; i < width; i++)
     {
         for (int j = 0; j < depth; j++)
