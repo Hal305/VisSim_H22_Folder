@@ -101,9 +101,12 @@ void TriangleSurface::construct()
         int y = mVertices[i].getY()/10;
         float z = mVertices[i].getZ()/10;
         if(grid[x][y].z())
-            z += mVertices[i].getZ()/2;
+        {
+            z = (z + mVertices[i].getZ())/2.f;
+        }
         else
             z = mVertices[i].getZ();
+        //qDebug() << x << y << z;
         grid[x][y].setX(x),grid[x][y].setY(y), grid[x][y].setZ(z);
     }
 
