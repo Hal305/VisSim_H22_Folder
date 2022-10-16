@@ -14,12 +14,12 @@ public:
     virtual void draw() override;
 
     GLfloat mAmbientStrength{0.3f};
-    QVector3D mAmbientColor{0.3f, 0.3f, 0.9f};  //Grey
+    QVector3D mAmbientColor{0.3f, 0.3f, 0.3f};
 
     GLfloat mLightStrength{0.7f};
     QVector3D mLightColor{0.7f, 0.0f, 0.9f};
 
-    GLfloat mSpecularStrength{0.6f};
+    GLfloat mSpecularStrength{0.9f};
     GLint mSpecularExponent{4};
 protected:
     std::vector<GLuint> mIndices;

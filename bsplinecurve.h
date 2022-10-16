@@ -3,15 +3,18 @@
 
 #include <visualobject.h>
 
-class BSplineCurve
+class BSplineCurve : public VisualObject
 {
 public:
-    BSplineCurve(int degree, std::vector<int> vec, std::vector<QVector2D> points);
+    BSplineCurve(int degree, std::vector<QVector3D> points);
     int findKnotInterval(float x);
     QVector3D evaluateBSplineSample(float x);
+    void construct();
+    void init(GLint matrixUniform) override;
+    void draw() override;
 private:
-    std::vector<int> t;
-    std::vector<QVector2D> c;
+    std::vector<double> t;
+    std::vector<QVector3D> c;
     int d = 0;
     int n = 0;
 };

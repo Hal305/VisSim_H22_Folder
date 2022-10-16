@@ -23,6 +23,7 @@ HEADERS += \
     rollingball.h \
     shader.h \
     texture.h \
+    tpsurface.h \
     trianglesurface.h \
     vertex.h \
     visualobject.h \
@@ -42,6 +43,7 @@ SOURCES += \
     rollingball.cpp \
     shader.cpp \
     texture.cpp \
+    tpsurface.cpp \
     trianglesurface.cpp \
     vertex.cpp \
     visualobject.cpp \

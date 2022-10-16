@@ -19,8 +19,6 @@ TriangleSurface::TriangleSurface(std::string filename, GLuint ShaderId, GLuint T
     triangulate(); //sets up triangles with indexes and neighbours
     normalize();
 
-    //findTriangle(0, 0);
-
     mMatrix.setToIdentity();
 }
 
@@ -110,6 +108,19 @@ void TriangleSurface::construct()
         grid[x][y].setX(x),grid[x][y].setY(y), grid[x][y].setZ(z);
     }
 
+    std::vector<QVector3D> normal;
+    for (unsigned int i = 0; i < mVertices.size(); i++)
+    {
+        float x = mVertices[i].getX()/10;
+        float y = mVertices[i].getY()/10;
+        float z = mVertices[i].getZ()/10;
+
+        long double ls = pow(x,2) + pow(y,2) + pow(z,2);
+        double l = sqrt(ls);
+        x /= l, y/= l, z/= l;
+        normal.push_back(QVector3D(x,y,z));
+    }
+
     mVertices.clear();
     depth /= 10, width /= 10;
     for (int i = 0; i < width; i++)
@@ -118,9 +129,10 @@ void TriangleSurface::construct()
         {
             float x = (grid[i][j].x() -width/2)*2+1;
             float y = (grid[i][j].y() -depth/2)*2+1;
-            float z = (grid[i][j].z()/2 -10);
-            Vertex v = {x,y,z, 0,0,0, 0,0};
-            mVertices.push_back(v);
+            float z = (grid[i][j].z()/2 -15);
+            float u = ((x + width)/(width)/2),
+                    v = ((y + depth)/(depth)/2);
+            mVertices.push_back({x,y,z, 0,0,0, u,v});
         }
     }
 
@@ -135,7 +147,7 @@ void TriangleSurface::construct()
 
             mIndices.push_back(Vi + 1);
             mIndices.push_back(Vi + depth);
-            mIndices.push_back(Vi + depth +1);  //Upper right
+            mIndices.push_back(Vi + depth + 1);  //Upper right
         }
     }
 }
@@ -192,52 +204,34 @@ void TriangleSurface::triangulate()
 
 void TriangleSurface::normalize()
 {
-    for(int i = 0; i < width-1; i++)
+    for(int i = 0; i < width; i++)
     {
         for(int j = 0; j < depth-1; j++)
         {
-            float Vi = i * depth + j; //Current vertex
-            int vcount = 0;
             QVector3D n = {0,0,0};
-            QVector3D V0, V1, V2, V3, V4, V5, V6 = {0, 0, 1};
+            QVector3D V0, V1, V2, V3, V4, V5, V6 = {0,0,0};
+            float Vi = i * depth + j;
+            //Current vertex
             V0 = {Vi, Vi, mVertices[Vi].getZ()};
-            if(Vi - width >= 0)
-            {   //Lower vertex
-                V1 = {Vi, Vi - width, mVertices[Vi - width].getZ()};
-                vcount++;
-            }
-            if(Vi + 1 <= width && Vi - width >= 0)
-            {   //Lower right vertex
-                V2 = {Vi + 1, Vi - width, mVertices[Vi - width + 1].getZ()};
-                vcount++;
-            }
-            if(Vi + 1 <= width)
-            {   //Right vertex
-                V3 = {Vi + 1, Vi, mVertices[Vi + 1].getZ()};
-                vcount++;
-            }
-            if(Vi + width <= depth)
-            {   //Upper vertex
-                V4 = {Vi, Vi + width, mVertices[Vi + width].getZ()};
-                vcount++;
-            }
-            if(Vi + width <= depth && Vi - 1 >= 0)
-            {   //Upper left vertex
-                V5 = {Vi -1, Vi + width, mVertices[Vi + width - 1].getZ()};
-                vcount++;
-            }
-            if(Vi - 1 >= 0)
-            {   //Left vertex
-                V6 = {Vi -1, Vi, mVertices[Vi - 1].getZ()};
-                vcount++;
-            }
-            n += QVector3D::normal(V0, V2, V1); //T0
-            n += QVector3D::normal(V0, V3, V2); //T1
-            n += QVector3D::normal(V0, V4, V3); //T2
-            n += QVector3D::normal(V0, V5, V4); //T3
-            n += QVector3D::normal(V0, V6, V5); //T4
-            n += QVector3D::normal(V0, V1, V6); //T5
-            n/=vcount;
+            if(j != 0)                  //Lower vertex
+                V1 = {Vi, Vi - 1, mVertices[Vi - 1].getZ()};
+            if(i + 1 < width && j != 0) //Lower right vertex
+                V2 = {Vi + depth, Vi - 1, mVertices[Vi + depth - 1].getZ()};
+            if(i + 1 < width)           //Right vertex
+                V3 = {Vi + depth, Vi, mVertices[Vi + depth].getZ()};
+            if(j < depth)               //Upper vertex
+                V4 = {Vi, Vi + 1, mVertices[Vi + 1].getZ()};
+            if(j < depth-1 && i > 0)    //Upper left vertex
+                V5 = {Vi - depth, Vi + 1, mVertices[Vi - depth + 1].getZ()};
+            if(i > 0)                   //Left vertex
+                V6 = {Vi - depth, Vi, mVertices[Vi - depth].getZ()};
+
+            n += QVector3D::normal(V0, V1, V2); //T0
+            n += QVector3D::normal(V0, V2, V3); //T1
+            n += QVector3D::normal(V0, V3, V4); //T2
+            n += QVector3D::normal(V0, V4, V5); //T3
+            n += QVector3D::normal(V0, V5, V6); //T4
+            n += QVector3D::normal(V0, V6, V1); //T5
             n.normalize();
             mVertices[Vi].setNormal(n);
         }

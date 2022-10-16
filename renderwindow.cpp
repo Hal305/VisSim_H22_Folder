@@ -31,11 +31,6 @@
 RenderWindow::RenderWindow(const QSurfaceFormat &format, MainWindow *mainWindow)
     : mContext(nullptr), mInitialized(false), mMainWindow(mainWindow)
 {
-//    std::vector<int> t {0,0,0,1,2,2,3};
-//    std::vector<QVector2D> c {{0,1},{1,0},{2,1},{3,0},{4,1}};
-//    BSplineCurve spline(2, t, c);
-//    qDebug() << spline.evaluateBSplineSample(1);
-
     //This is sent to QWindow:
     setSurfaceType(QWindow::OpenGLSurface);
     setFormat(format);
@@ -160,7 +155,7 @@ void RenderWindow::init()
     mObjects.push_back(temp);
 
     surface = new TriangleSurface("../VisSim_H22_Folder/terrain.txt",
-                                  mShaders[2]->getProgram(), mTextures[0]->id());
+                                  mShaders[2]->getProgram(), mTextures[1]->id());
     mObjects.push_back(surface);
     ball = new RollingBall(3);
     dynamic_cast<RollingBall*>(ball)->setSurface(surface);
@@ -170,6 +165,14 @@ void RenderWindow::init()
     mLight->setName("light");
     mLight->mMatrix.translate(1.f, 1.f, 1.f);
     mObjects.push_back(mLight);
+
+    std::vector<QVector3D> c {{0, 1, 0},
+                              {1, 0, 0},
+                              {2, 1, 0},
+                              {3, 0, 0},
+                              {4, 1, 0}};
+    spline = new BSplineCurve(2, c);
+    mObjects.push_back(spline);
 
     //Quadtree init
 //    gsml::Point2D a{-4, -4}, b{4, -4}, c{4, 4}, d{-4, 4};

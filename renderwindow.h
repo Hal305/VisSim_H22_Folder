@@ -66,6 +66,7 @@ private:
     VisualObject* ball {nullptr};
     VisualObject* rain {nullptr};
     std::vector<RainDrop*> mRaindrops;
+    BSplineCurve* spline {nullptr};
     Input mInput;
     Camera* mCamera {nullptr};
     float aspectratio = 1.f;
